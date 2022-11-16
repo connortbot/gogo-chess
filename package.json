@@ -1,0 +1,17 @@
+{
+  "name": "gogo-chess",
+  "version": "0.2.0",
+  "description": "King GoGo package file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Connor T. Loi",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.6.0",
+    "node-schedule": "^2.1.0",
+    "sequelize": "^6.25.3",
+    "sqlite3": "^5.1.2"
+  }
+}

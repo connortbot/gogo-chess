@@ -1,0 +1,53 @@
+{
+    "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff)]",
+
+    "NormalGoGos": {
+        "Sumon": {
+            "type": "AD",
+            "ATK": 5,
+            "HP": 100,
+            "CRITRATE": 0.10,
+            "CRITDMG": 0.5,
+            "ABILITY": ["damage",5.0],
+            "rarity": "Normal",
+
+
+            "description": "Sumon is an angry, little alien whose home planet is completely unknown. His large, sharp teeth make for a formidable foe that few want to fight when he's angry."
+        }
+    },
+    "MostWantedGoGos": {
+
+    },
+
+
+
+
+    "Weapons": {
+        "": {
+            "name": "None",
+            "alias": "IOEJAFDKNSOIUHSIUHIEFSDLIHKUDJLIHSUDJLAHKEIUDLUF"
+        },
+        "IronSword": {
+            "name": "Iron Sword",
+            "ATK": 10,
+            "CRITRATE": 0,
+            "CRITDMG": 0.01,
+            "scaler": "dmg"
+        }
+    },
+
+    "Gear": {
+        "": {
+            "name": "None",
+            "alias": "IOEJAFDKNSIEFSDLIHKUDJLIHSUDJLAHKEIUDLUF"
+        },
+        "UfusKomono": {
+            "name": "Ufus Komono",
+            "HP": 0.1,
+            "ATK": 5,
+            "CRITRATE": 0.05,
+            "CRITDMG": 0.06,
+            "alias": "UK"
+        }
+    }
+}
