@@ -145,7 +145,6 @@ async function initialize() {
 		sequelize = new Sequelize('DigitalOcean connection');
 	}
     await sequelize.sync();
-
     const global_counterseq = await global_counter.findOne();
     const Users = await User.findAll();
     const GoGos = await GoGo.findAll();
@@ -224,6 +223,11 @@ sequelize.authenticate().then(() => {
         const gogo = await GoGo.findOne({where: { id: id }});
         return gogo;
     },
+    async removeGoGo(gogoID) {
+        const gogo = await GoGo.findOne({where: {id: gogoID}});
+        await gogo.destroy();
+    },
+    // userID: String of Discord ID
     async getUser(userID) {
         const user = await User.findOne({where: {id: userID }});
         return user;
