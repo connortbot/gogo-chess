@@ -1,6 +1,6 @@
 # gogo-chess
 
-== GOGO CHESS 0.2.0 ==
+== GOGO CHESS 0.2.5 ==
 Discord Bot for the DMRPG, GoGo World. Run using the Discord.js library.
 
 Currently, the project is built on a local SQLITE3 database. It is not maintained within this git.
