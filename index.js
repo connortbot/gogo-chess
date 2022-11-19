@@ -5,6 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInte
 const { token, dojo } = require('./config.json');
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
+const battles = require('./battles');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessageReactions] });
 const database = require('./database');
@@ -32,6 +33,8 @@ client.once(Events.ClientReady, c => {
 
 });
 
+
+
 // COMMAND INTERACTIONS //
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
@@ -43,6 +46,9 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
     try {
+		// Example Testing Battles
+		//const channel = client.channels.cache.get("1038200097743315017");
+		//battles.start_battle(["Sumon#13"],["Monster/Kaeda"],channel);
         await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
@@ -311,4 +317,3 @@ schedule.scheduleJob('0 0 * * *', async () => {
 		}
 	}
 });
-
