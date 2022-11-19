@@ -1,15 +1,17 @@
 {
-    "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff)]",
+    "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff), targeting,name]",
+    "_comment2": "RANGE is set to Nearest/Farthest/Random",
 
     "NormalGoGos": {
         "Sumon": {
             "type": "AD",
             "ATK": 5,
             "HP": 100,
-            "CRITRATE": 0.10,
+            "CRITRATE": 0.1,
             "CRITDMG": 0.5,
-            "ABILITY": ["damage",5.0],
+            "ABILITY": ["damage",5.0,"","Nearest","BITE"],
             "rarity": "Normal",
+            "COOLDOWN": 3,
 
 
             "description": "Sumon is an angry, little alien whose home planet is completely unknown. His large, sharp teeth make for a formidable foe that few want to fight when he's angry."
@@ -19,8 +21,16 @@
 
     },
 
-
-
+    "Monsters": {
+        "Kaeda": {
+            "type": "AP",
+            "ATK": 50,
+            "CRITRATE": 0.20,
+            "CRITDMG": 0.80,
+            "ABILITY": ["damage",15.0,"","Nearest","SCORCHING BREATH"],
+            "COOLDOWN": 8
+        }
+    },
 
     "Weapons": {
         "": {
