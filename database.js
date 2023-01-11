@@ -1,4 +1,4 @@
-const { TextInputAssertions } = require('discord.js');
+const { TextInputAssertions, EmbedBuilder } = require('discord.js');
 const Sequelize = require('sequelize');
 const balance = require('./balance.json');
 var sequelize
@@ -43,6 +43,9 @@ const User = sequelize.define('User', {
     },
     rolls: {
         type: Sequelize.INTEGER
+    },
+    team: {
+        type: Sequelize.STRING
     }
 });
 const GoGo = sequelize.define('GoGo', {
@@ -153,20 +156,10 @@ async function initialize() {
     console.log(GoGos);
     GLOBAL = global_counterseq.counter;
     console.log(GLOBAL);
-    //await Gear.destroy({truncate:true})
-    //const us = await User.findOne({where: {id: "450385597631299594"}});
-    //await us.update({gear:""});
-   // for (let i=0; i<22; i++) {
-   //     var bruh = await createNewGear("UfusKomono");
-   //     console.log(bruh);
-    //    var n = us.gear;
-    //    if (i==0) {
-     //       n += bruh;
-    //    } else {
-    //        n += "-"+bruh;
-      //  }
-   //     await us.update({gear:n})
-    //}
+
+    //.drop = delete all tables
+    //.destroy = ???
+
 }
 
 
@@ -205,14 +198,15 @@ sequelize.authenticate().then(() => {
     async createNewUser(userID) {
         const GoGoID = await createNewGoGo('Sumon');
         console.log(GoGoID);
-        User.create({
+        await User.create({
             id: userID,
             inventory: GoGoID,
             gear: "",
             training: "",
             pity: 0,
             mwpity: 0,
-            rolls: 0
+            rolls: 0,
+            team: ""
         });
     },
     async getUsers() {
@@ -223,9 +217,31 @@ sequelize.authenticate().then(() => {
         const gogo = await GoGo.findOne({where: { id: id }});
         return gogo;
     },
-    async removeGoGo(gogoID) {
+    async removeGoGo(userID,gogoID) {
         const gogo = await GoGo.findOne({where: {id: gogoID}});
         await gogo.destroy();
+        const user = await User.findOne({where: {id: userID}});
+        var inv = "";
+        var team = "";
+        for (let i=0; i<user.inventory.length; i++) {
+            if (user.inventory[i] != gogoID) {
+                if (inv == "") {
+                    inv = inv+gogoID;
+                } else {
+                    inv = inv+"-"+gogoID
+                }
+            }
+        }
+        for (let i=0; i<user.team.length; i++) {
+            if (user.team[i] != gogoID) {
+                if (team == "") {
+                    team = team+gogoID;
+                } else {
+                    team = team+"-"+gogoID
+                }
+            }
+        }
+        await user.update({inventory: inv, team: team});
     },
     // userID: String of Discord ID
     async getUser(userID) {
@@ -284,16 +300,19 @@ sequelize.authenticate().then(() => {
         }
         return 'firstGearing';
     },
-    async giveWeapon(userID,weaponID) {
+    async giveGearWeapon(userID,gearID) {
         const user = await User.findOne({where: {id: userID}});
-            if (user.gear == "") {
-                await user.update({gear: weaponID});
+        if (user.gear == "") {
+            await user.update({gear: gearID});
         } else {
-            await user.update({gear: user.gear+"-"+weaponID});
+            await user.update({gear: user.gear+"-"+gearID});
         }
     },
 
-
+    async updateTeam(userID,teamArray) {
+        const user = await User.findOne({where: {id: userID}});
+        await user.update({team: teamArray});
+    },
 
     async levelGoGo(id) {
         const gogo = await GoGo.findOne({where: {id:id}});

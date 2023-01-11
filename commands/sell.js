@@ -40,7 +40,7 @@ module.exports = {
 
             if (name === gogoName) {
                 // do all the stuff here
-                await db.removeGoGo(posGoGo[i]); // call the removeGoGo function (since nothing is returned, cant even store it in a const or var)
+                await db.removeGoGo(interaction.user.id.toString(),posGoGo[i]); // call the removeGoGo function (since nothing is returned, cant even store it in a const or var)
                 await user.update({rolls: user.rolls+sellValue});
                 await interaction.reply("You've successfully received **"+sellValue.toString()+"** for selling " + gogoName); //this will be the final output (reply) back to user once all the computation has be done 
             }

@@ -1,13 +1,17 @@
 // REQUIRED MODULES: NODE: SEQUELIZE, DISCORD.JS
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, IntentsBitField } = require('discord.js');
 const { token, dojo } = require('./config.json');
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
 const battles = require('./battles');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessageReactions] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, 
+	GatewayIntentBits.GuildMessageReactions, 
+	GatewayIntentBits.GuildMessages, 
+	GatewayIntentBits.MessageContent, 
+	GatewayIntentBits.Guilds,] });
 const database = require('./database');
 const schedule = require('node-schedule');
 const { channel } = require('node:diagnostics_channel');
@@ -169,7 +173,7 @@ client.on(Events.InteractionCreate, async interaction => {
 				i -= 1;
 			}
 		}
-		if (lst.length == 0) {
+		if (lst.length == 0 || (lst.length == 1 && lst[0] == '')) {
 			embed.setTitle(interaction.user.username+" as no Gear!");
 			return
 		}
