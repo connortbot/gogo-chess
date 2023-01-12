@@ -153,20 +153,6 @@ async function initialize() {
     console.log(GoGos);
     GLOBAL = global_counterseq.counter;
     console.log(GLOBAL);
-    //await Gear.destroy({truncate:true})
-    //const us = await User.findOne({where: {id: "450385597631299594"}});
-    //await us.update({gear:""});
-   // for (let i=0; i<22; i++) {
-   //     var bruh = await createNewGear("UfusKomono");
-   //     console.log(bruh);
-    //    var n = us.gear;
-    //    if (i==0) {
-     //       n += bruh;
-    //    } else {
-    //        n += "-"+bruh;
-      //  }
-   //     await us.update({gear:n})
-    //}
 }
 
 

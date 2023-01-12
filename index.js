@@ -20,7 +20,7 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
 	const command = require(filePath);
-	// Set a new item in the Collection with the key as the command name and the value as the exported module
+	// Set a new item in the Collection with th key as the command name and the value as the exported module
 	if ('data' in command && 'execute' in command) {
 		client.commands.set(command.data.name, command);
 	} else {
@@ -47,9 +47,10 @@ client.on(Events.InteractionCreate, async interaction => {
 
     try {
 		// Example Testing Battles
-		//const channel = client.channels.cache.get("1038200097743315017");
-		//battles.start_battle(["Sumon#13"],["Monster/Kaeda"],channel);
+		const channel = client.channels.cache.get("1038200097743315017");
+		battles.start_battle(["Sumon#0"],["Monster/Kaeda"],channel);
         await command.execute(interaction);
+
 	} catch (error) {
 		console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
