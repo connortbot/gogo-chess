@@ -6,9 +6,12 @@ const { NormalGoGos, Weapons, Gear } = require('../balance.json');
 // KNOWN BUGS:
 //// If you put in a nonexistent gear name or alias, itll just error out.
 
+
+
+
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('gear')
+        .setName('gear')
 		.setDescription('Equips GoGos with gear.')
         .addStringOption((option) =>
             option

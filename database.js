@@ -163,6 +163,9 @@ async function initialize() {
 
     //.drop = delete all tables
     //.destroy = ???
+    //await Weapon.create({id: 'IronSword#2021',lvl: 1});
+    //await User.update({gear: 'Weapon/IronSword#2023-Weapon/IronSword#2021'},{where: {id: '450385597631299594'}});
+    
 
 }
 
