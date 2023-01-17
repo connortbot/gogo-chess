@@ -41,7 +41,7 @@ module.exports = {
             }
             // Defeated the Dungeon
             await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' upon clearing this dungeon.');
-            const gearID = database.createNewGear(Dungeons[dungeonName]["loot"]);
+            const gearID = await database.createNewGear(Dungeons[dungeonName]["loot"]);
             await database.giveGearWeapon(interaction.user.id.toString(),gearID);
             await interaction.editReply(interaction.user.username+' cleared the '+dungeonName+'.');
         } else {

@@ -48,7 +48,12 @@ client.on(Events.InteractionCreate, async interaction => {
 		console.error(`No command matching ${interaction.commandName} was found.`);
 		return;
 	}
-
+	const user = await database.getUser(interaction.user.id.toString());
+	console.log(interaction.commandName);
+	if (user === null && interaction.commandName != 'register') {
+		interaction.reply('You are not a registered user! Try **/register** to join GoGo World.')
+		return;
+	}
     try {
         await command.execute(interaction);
 
