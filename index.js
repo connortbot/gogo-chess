@@ -50,9 +50,6 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
     try {
-		// Example Testing Battles
-		const channel = client.channels.cache.get("1038200097743315017");
-		battles.start_battle(["Sumon#0"],["Monster/Kaeda"],channel);
         await command.execute(interaction);
 
 	} catch (error) {

@@ -161,7 +161,10 @@ async function initialize() {
     GLOBAL = global_counterseq.counter;
     console.log(GLOBAL);
 
-    //.drop = delete all tables
+    //await User.drop();
+    //await Gear.drop();
+    //await GoGo.drop();
+    //await Weapon.drop();
     //.destroy = ???
     //await Weapon.create({id: 'IronSword#2021',lvl: 1});
 

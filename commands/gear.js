@@ -73,6 +73,10 @@ module.exports = {
                 menu
             )
         console.log(dropdown);
-        const reply = await interaction.editReply({content: 'Select one of your Gears:', components: [dropdown]});
+        if (menu.options.length == 0) {
+            await interaction.editReply('You have none of this type of gear!');
+        } else {
+            const reply = await interaction.editReply({content: 'Select one of your Gears:', components: [dropdown]});
+        }
 	},
 };

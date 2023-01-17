@@ -6,7 +6,7 @@
         "Sumon": {
             "type": "AD",
             "ATK": 5,
-            "HP": 1000,
+            "HP": 100,
             "CRITRATE": 0.1,
             "CRITDMG": 0.5,
             "ABILITY": ["damage",5.0,"","Nearest","BITE"],
@@ -52,6 +52,7 @@
         
         "Dragon K'aeda": {
             "type": "AP",
+            "HP": 1000,
             "ATK": 50,
             "CRITRATE": 0.20,
             "CRITDMG": 0.80,
