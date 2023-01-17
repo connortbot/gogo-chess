@@ -66,7 +66,8 @@ async function createEmbed(gogo,interaction) {
     }
     if (gogo.weapon != '') {
         const weapon = await database.getWeapon(gogo.weapon);
-        var boosts = calculator.calcWeaponStats(gogo.weapon.split('#')[0].split('/')[1],weapon.lvl);
+        var boosts = await calculator.calcWeaponStats(gogo.weapon.split('#')[0],weapon.lvl);
+        console.log(boosts);
         gogoATKBoost += boosts[0];
         gogoCRBoost += boosts[1];
         gogoCDBoost += boosts[2];
@@ -79,7 +80,7 @@ async function createEmbed(gogo,interaction) {
     gogoCDBoost = parseFloat(gogoCDBoost.toFixed(3).toString());
     var weaponKey
     if (gogo.weapon != '') {
-        weaponKey = gogo.weapon.split('#')[0].split('/')[1]
+        weaponKey = gogo.weapon.split('#')[0]
     } else {
         weaponKey = ''
     }
@@ -90,7 +91,7 @@ async function createEmbed(gogo,interaction) {
         .setThumbnail(interaction.user.displayAvatarURL())
         .addFields({ name: ":crossed_swords: **BASE ATK** :crossed_swords:",value: gogoATK.toString()+" (+"+(gogoATKBoost*1).toString()+") *"+bGoGo["type"]+"*", inline: true },
                 { name: ":heart: **BASE HP** :heart:", value: gogoHP.toString()+" (+"+(gogoHPBoost*1).toString()+")", inline: true  },
-                { name: ":drop_of_blood: **CRIT DMG** :drop_of_blood:",value: (bGoGo["CRITDMG"]*100).toString()+"%"+" (+"+(gogoCDBoost*100).toString()+"%"+")",inline:true },
+                { name: ":drop_of_blood: **CRIT DMG** :drop_of_blood:",value: (bGoGo["CRITDMG"]*100).toString()+"%"+" (+"+((gogoCDBoost*100).toFixed(2)).toString()+"%"+")",inline:true },
                 { name: ":drop_of_blood: **CRIT RATE** :drop_of_blood:",value: (bGoGo["CRITRATE"]*100).toString()+"%"+" (+"+(gogoCRBoost*100).toString()+"%"+")",inline:true})
         .addFields({ name: ":dagger: **Weapon** :dagger:", value: Weapons[weaponKey]["name"] })
         .setImage("https://static.wikia.nocookie.net/crazybonespedia/images/0/0f/Smilingcrazybone.jpg/revision/latest?cb=20150217121608")//PLACEHOLDER IMAGE OF SUMON

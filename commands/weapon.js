@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const database = require('../database');
-const { ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder } = require('discord.js');
+const calculator = require("../calculator");
+const { ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { NormalGoGos, Weapons, Gear } = require('../balance.json');
 
 module.exports = {
@@ -50,7 +51,7 @@ module.exports = {
         console.log(weapon);
         var embed
         if (weapon.length == 1) {
-            const lostWeaponGoGo = await database.WeaponizeGoGo(gogo,weapon[0],interaction.user.id.toString());
+            const lostWeaponGoGo = await database.WeaponizeGoGo(gogo,weapon[0].split('/')[1],interaction.user.id.toString());
             if (lostWeaponGoGo != 'firstWeaponize') {
                 embed = new EmbedBuilder()
                     .setTitle(interaction.user.username+"'s "+lostWeaponGoGo.split("#")[0]+" unequipped the "+Weapons[weapon[0].split('#')[0].split('/')[1]]["name"]+".");
@@ -81,11 +82,11 @@ module.exports = {
             if (weapon.length < 5) {l = weapon.length;} 
             else {l = 5;}
             for (let i=0; i<l; i++) {
-                var tWeapon = await database.getWeapon(weapon[i]);
+                var tWeapon = await database.getWeapon(weapon[i].split('/')[1]);
                 const weaponBoosts = await calculator.calcWeaponStats(weapon[i].split('#')[0].split('/')[1],tWeapon.lvl);
                 const descATK = ", ATK "+weaponBoosts[0].toString()
-                const descCR = ", CRIT RATE "+(weaponBoosts[1]*100).toString()+"%"
-                const descCD = ", CRIT DMG "+(weaponBoosts[2]*100).toString()+"%"
+                const descCR = ", CRIT RATE "+(weaponBoosts[1]*100).toFixed(2).toString()+"%"
+                const descCD = ", CRIT DMG "+(weaponBoosts[2]*100).toFixed(2).toString()+"%"
                 const userGoGos = user.inventory.split('-');
                 var owner = " [Owned by no one.]"
                 for (let i=0; i<userGoGos.length; i++) {
@@ -109,7 +110,7 @@ module.exports = {
                     if (num > weapon.length || num < 1) {
                         interaction.editReply('This is an invalid #. Please try **/weapon** again.')
                     } else {
-                        const lostWeaponGoGo = await database.WeaponizeGoGo(gogo,weapon[num-1],interaction.user.id.toString());
+                        const lostWeaponGoGo = await database.WeaponizeGoGo(gogo,weapon[num-1].split('/')[1],interaction.user.id.toString());
                         if (lostWeaponGoGo != 'firstWeaponize') {
                             embed = new EmbedBuilder()
                                 .setTitle(interaction.user.username+"'s "+lostWeaponGoGo.split("#")[0]+" unequipped the "+Weapons[weapon[0].split('#')[0].split('/')[1]]["name"]+".");
