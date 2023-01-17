@@ -1,5 +1,4 @@
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
-const weapon = require('./commands/weapon');
 const database = require('./database');
 
 async function calcWeaponStats(weaponIdentifier,weaponlvl) {

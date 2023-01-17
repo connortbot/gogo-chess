@@ -84,6 +84,7 @@
         },
         "UfusKomono": {
             "name": "Ufus Komono",
+            "rarity": 1,
             "HP": 0.1,
             "ATK": 5,
             "CRITRATE": 0.05,

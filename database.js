@@ -148,6 +148,10 @@ async function initialize() {
 		sequelize = new Sequelize('DigitalOcean connection');
 	}
     await sequelize.sync();
+    
+    // Add the following line when setting up your first time local development database. Run the bot once, and then comment the line.
+    //global_counter.create({call: 0, counter: 0});
+
     const global_counterseq = await global_counter.findOne();
     const Users = await User.findAll();
     const GoGos = await GoGo.findAll();
@@ -159,6 +163,7 @@ async function initialize() {
 
     //.drop = delete all tables
     //.destroy = ???
+    //await Weapon.create({id: 'IronSword#2021',lvl: 1});
 
 }
 
