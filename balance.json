@@ -6,7 +6,7 @@
         "Sumon": {
             "type": "AD",
             "ATK": 5,
-            "HP": 100,
+            "HP": 1000,
             "CRITRATE": 0.1,
             "CRITDMG": 0.5,
             "ABILITY": ["damage",5.0,"","Nearest","BITE"],

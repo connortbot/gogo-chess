@@ -66,9 +66,25 @@ async function battle_loop(s1,s2,channel) {
                 var damage = thisGoGoStats["ATK"];
                 if (croll <= thisGoGoStats["CRITRATE"]) {
                     damage = damage*(thisGoGoStats["CRITDMG"]+1);
-                    await channel.send(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"]);
+                    
+                // Create embeded text for the ith iteration of the loop 
+                const embededText = new EmbedBuilder() 
+                    .setColor(0x0099FF)
+                    .setTitle(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"])
+
+                // sends the message into the channel defined in index 
+                await channel.send({ embeds: [embededText] }); 
+                // await channel.send(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"]); - original non-embeded message 
+
                 } else {
-                    await channel.send(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]);
+                    // Create embeded text for the ith iteration of the loop 
+                const embededText = new EmbedBuilder() 
+                    .setColor(0x0099FF)
+                    .setTitle(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"])
+
+                // sends the message into the channel defined in index 
+                await channel.send({ embeds: [embededText] }); 
+                // await channel.send(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]);
                 }
                 side2[0]["HP"] = side2[0]["HP"]-damage;
     
@@ -80,14 +96,30 @@ async function battle_loop(s1,s2,channel) {
                         const fdmg = damage*ability[1];
                         if (ability[3]=="Nearest") {
                             side2[0]["HP"] = side2[0]["HP"]-fdmg;
-                            await channel.send(thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!");
+    
+                        // Create embeded text for the ith iteration of the loop 
+                        const embeddedText = new EmbedBuilder() 
+                        .setColor(0xad11f5) // #ad11f5 purple 
+                        .setTitle(":crossed_swords:  "+thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!  :crossed_swords:")
+
+                        // sends the message into the channel defined in index 
+                        await channel.send({ embeds: [embeddedText] }); 
+                        // await channel.send(thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!"); - original non-embeded message
                         }
                     }
                 }
                 if (side2[0]["HP"] <= 0) {
-                    var killstrings = ["killed","slayed"]
+                    var killstrings = ["killed","slayed","annihilated","destroyed","defeated","murdered","decimated","obliterated"]
                     var kill_str = killstrings[Math.floor((Math.random()*killstrings.length))];
-                    await channel.send(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!");
+                    // Create embeded text for the ith iteration of the loop 
+                const embeddedText = new EmbedBuilder() 
+                .setColor(0x880808) // #880808 - bloody red
+                .setTitle(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!")
+
+                // sends the message into the channel defined in index 
+                await channel.send({ embeds: [embeddedText] }); 
+                // await channel.send(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!"); - original non-embedded message 
+
                     side2.shift();
                 }
                 await new Promise(r => setTimeout(r, 100))
@@ -101,9 +133,24 @@ async function battle_loop(s1,s2,channel) {
                 var damage = thisGoGoStats["ATK"];
                 if (croll <= thisGoGoStats["CRITRATE"]) {
                     damage = damage*(thisGoGoStats["CRITDMG"]+1);
-                    await channel.send(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"]);
+    
+                // Create embeded text for the ith iteration of the loop 
+                const embeddedText = new EmbedBuilder() 
+                    .setColor(0xd80000) // #d80000 - red
+                    .setTitle(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"])
+
+                // sends the message into the channel defined in index 
+                await channel.send({ embeds: [embeddedText] }); 
+                // await channel.send(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"]); - original non-embedded message 
                 } else {
-                    await channel.send(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]);
+                    // Create embeded text for the ith iteration of the loop 
+                const embededText = new EmbedBuilder() 
+                    .setColor(0xd80000) // #d80000 - red
+                    .setTitle(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"])
+
+                // sends the message into the channel defined in index 
+                await channel.send({ embeds: [embededText] }); 
+                // await channel.send(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]); - original non-embedded message 
                 }
                 side1[0]["HP"] = side1[0]["HP"]-damage;
     
@@ -115,14 +162,29 @@ async function battle_loop(s1,s2,channel) {
                         const fdmg = damage*ability[1];
                         if (ability[3]=="Nearest") {
                             side1[0]["HP"] = side1[0]["HP"]-fdmg;
-                            await channel.send(thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!");
+    
+                        // Create embeded text for the ith iteration of the loop 
+                        const embeddedText = new EmbedBuilder() 
+                        .setColor(0xad11f5) // #ad11f5 purple 
+                        .setTitle(":crossed_swords:  "+thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!  :crossed_swords:")
+
+                        // sends the message into the channel defined in index 
+                        await channel.send({ embeds: [embeddedText] }); 
+                        // await channel.send(thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!"); - original non-embedded message
                         }
                     }
                 }
                 if (side1[0]["HP"] <= 0) {
                     var killstrings = ["killed","slayed"]
                     var kill_str = killstrings[Math.floor((Math.random()*killstrings.length))];
-                    await channel.send(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!");
+                    // Create embeded text for the ith iteration of the loop 
+                const embeddedText = new EmbedBuilder() 
+                .setColor(0x880808) // #880808 - bloody red
+                .setTitle(":drop_of_blood:  "+thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!  :drop_of_blood:")
+
+                // sends the message into the channel defined in index 
+                await channel.send({ embeds: [embeddedText] }); 
+                // await channel.send(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!"); - original non-embedded message 
                     side1.shift();
                 }
                 await new Promise(r => setTimeout(r, 100))
@@ -138,6 +200,16 @@ async function battle_loop(s1,s2,channel) {
             return "side1";
         }
     }
+    // Create embeded text for the ith iteration of the loop 
+    const embeddedText = new EmbedBuilder() 
+    .setColor(0xFFDF00) // #FFDF00 - yellow
+    .setTitle("***:trophy:   BATTLE OVER   :trophy:***")
+
+    // sends the message into the channel defined in index 
+    await channel.send({ embeds: [embeddedText] }); 
+    // await channel.send("BATTLE OVER");
+
+    return;
 }
 
 module.exports = {

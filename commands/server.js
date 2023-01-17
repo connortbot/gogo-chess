@@ -13,5 +13,5 @@ module.exports = {
 		const b = interaction.guild.members.cache.filter(member => member.user.bot).size;
 	 	await interaction.reply("This server is "+interaction.guild.name+" and has "+(m - b).toString()+" members."); //wrong number of users?
 
-	},	
+	},	    
 };
