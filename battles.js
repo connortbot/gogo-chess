@@ -193,23 +193,21 @@ async function battle_loop(s1,s2,channel) {
             await new Promise(r => setTimeout(r, 500))
             turn += 1
         }
-        await channel.send("BATTLE OVER");
+        // Create embeded text for the ith iteration of the loop 
+        const embeddedText = new EmbedBuilder() 
+            .setColor(0xFFDF00) // #FFDF00 - yellow
+            .setTitle("***:trophy:   BATTLE OVER   :trophy:***")
+
+        // sends the message into the channel defined in index 
+        await channel.send({ embeds: [embeddedText] }); 
+        // await channel.send("BATTLE OVER");
         if (side1.length == 0) {
             return "side2";
         } else {
             return "side1";
         }
-    }
-    // Create embeded text for the ith iteration of the loop 
-    const embeddedText = new EmbedBuilder() 
-    .setColor(0xFFDF00) // #FFDF00 - yellow
-    .setTitle("***:trophy:   BATTLE OVER   :trophy:***")
-
-    // sends the message into the channel defined in index 
-    await channel.send({ embeds: [embeddedText] }); 
-    // await channel.send("BATTLE OVER");
-
     return;
+    }
 }
 
 module.exports = {
