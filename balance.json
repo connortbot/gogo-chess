@@ -22,7 +22,35 @@
     },
 
     "Monsters": {
-        "Kaeda": {
+        "Spider": {
+            "type": "AD",
+            "HP": 50,
+            "ATK": 1,
+            "CRITRATE": 0.05,
+            "CRITDMG": 0.10,
+            "ABILITY": ["damage",2.0,"","Nearest","BITE"],
+            "COOLDOWN": 10
+        },
+        "Big Spider": {
+            "type": "AD",
+            "HP": 50,
+            "ATK": 8,
+            "CRITRATE": 0.20,
+            "CRITDMG": 0.50,
+            "ABILITY": ["damage",4.0,"","Nearest","STAB"],
+            "COOLDOWN": 4
+        },
+        "Spider Queen": {
+            "type": "AD",
+            "HP": 80,
+            "ATK": 10,
+            "CRITRATE": 0.20,
+            "CRITDMG": 0.80,
+            "ABILITY": ["damage",8.0,"","Nearest","POISON LUNGE"],
+            "COOLDOWN": 8
+        },
+        
+        "Dragon K'aeda": {
             "type": "AP",
             "ATK": 50,
             "CRITRATE": 0.20,
@@ -31,6 +59,9 @@
             "COOLDOWN": 8
         }
     },
+
+
+
 
     "Weapons": {
         "": {
@@ -58,6 +89,19 @@
             "CRITRATE": 0.05,
             "CRITDMG": 0.06,
             "alias": "UK"
+        }
+    },
+
+
+
+
+
+    "Dungeons": {
+        "Spider's Lair": {
+            "name": "Spider's Lair",
+            "loot": "UfusKomono",
+            "recommended_lvl": 5,
+            "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
         }
     }
 }
