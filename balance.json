@@ -1,7 +1,20 @@
 {
     "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff), targeting,name]",
     "_comment2": "RANGE is set to Nearest/Farthest/Random",
-
+    "SellValues": {
+        "Gear": {
+            "1": 50,
+            "2": 100,
+            "3": 200,
+            "4": 400,
+            "5": 1000
+        },
+        "Weapons": {
+            "3": 100,
+            "4": 10000,
+            "5": 1000000
+        }
+    },
     "NormalGoGos": {
         "Sumon": {
             "type": "AD",
@@ -74,7 +87,8 @@
             "ATK": 10,
             "CRITRATE": 0,
             "CRITDMG": 0.01,
-            "scaler": "dmg"
+            "scaler": "dmg",
+            "rarity": 3
         }
     },
 
