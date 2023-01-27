@@ -41,7 +41,7 @@ const User = sequelize.define('User', {
     mwpity: {
         type: Sequelize.INTEGER
     },
-    rolls: {
+    bones: {
         type: Sequelize.INTEGER
     },
     team: {
@@ -150,7 +150,7 @@ async function initialize() {
     await sequelize.sync();
     
     // Add the following line when setting up your first time local development database. Run the bot once, and then comment the line.
-    //global_counter.create({call: 0, counter: 0});
+    // await global_counter.create({call: 0, counter: 0});
 
     const global_counterseq = await global_counter.findOne();
     const Users = await User.findAll();
@@ -166,8 +166,36 @@ async function initialize() {
     //await GoGo.drop();
     //await Weapon.drop();
     //.destroy = ???
-    //await Weapon.create({id: 'IronSword#2021',lvl: 1});
-
+    //await Weapon.create({id: 'Weapon/IronSword#2021',lvl: 1});
+    /*
+    await Gear.create({
+        id: "UfusKomono#1234",
+        lvl: 1,
+        HP: 1000,
+        ATK: 2892489,
+        CRITRATE: 0.0,
+        CRITDMG: 0.0
+    });
+    await Gear.create({
+        id: "UfusKomono#1284",
+        lvl: 1,
+        HP: 1000,
+        ATK: 2892489,
+        CRITRATE: 0.0,
+        CRITDMG: 0.0
+    });
+    await Gear.create({
+        id: "UfusKomono#8234",
+        lvl: 1,
+        HP: 1000,
+        ATK: 2892489,
+        CRITRATE: 0.0,
+        CRITDMG: 0.0
+    });
+    */
+   //var user = await User.findOne({where: {id: "450385597631299594"}});
+   //user.gear = "Weapon/IronSword#2021-UfusKomono#1234-UfusKomono#1284-UfusKomono#8234";
+   //await user.save();
 }
 
 
@@ -194,7 +222,7 @@ sequelize.authenticate().then(() => {
     async createNewGear(gearIdentifier) {
         await Gear.create({
             id: gearIdentifier+"#"+(GLOBAL).toString(),
-            lvl: 0,
+            lvl: 1,
             HP: balance.Gear[gearIdentifier]["HP"],
             ATK: balance.Gear[gearIdentifier]["ATK"],
             CRITRATE: balance.Gear[gearIdentifier]["CRITRATE"],
@@ -213,7 +241,7 @@ sequelize.authenticate().then(() => {
             training: "",
             pity: 0,
             mwpity: 0,
-            rolls: 0,
+            bones: 0,
             team: ""
         });
     },
@@ -335,5 +363,39 @@ sequelize.authenticate().then(() => {
         const user = await User.findOne({where: {id:userID}});
         await user.update({training: gogoID});
         return 'WOOHOO!!!!';
+    },
+
+    async burnGear(userID,gearID) {
+        const user = await User.findOne({where: {id:userID}});
+        const gear = await Gear.findOne({where: {id: gearID}});
+        await gear.destroy();
+        var m = user.gear.split('-');
+        m = m.filter(g => !(g == gearID));
+        var n = ""
+        for (let i=0; i<m.length; i++) {
+            n = n+m[i];
+        }
+        user.gear = n;
+        await user.save();
+    },
+
+    async burnWeapon(userID,weaponID) {
+        const user = await User.findOne({where: {id:userID}});
+        const weapon = await Weapon.findOne({where: {id: weaponID}});
+        await weapon.destroy();
+        var m = user.gear.split('-');
+        m = m.filter(g => !(g == weaponID));
+        var n = "";
+        for (let i=0; i<m.length; i++) {
+            n = n+m[i];
+        }
+        user.gear = n;
+        await user.save();
+    },
+
+    async giveBones(usrID,bonesAMT) {
+        const user = await User.findOne({where: {id: usrID}});
+        user.bones = user.bones + bonesAMT;
+        await user.save();
     }
  }
