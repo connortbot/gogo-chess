@@ -166,11 +166,11 @@ async function initialize() {
     //await GoGo.drop();
     //await Weapon.drop();
     //.destroy = ???
-    //await Weapon.create({id: 'Weapon/IronSword#2021',lvl: 1});
+    //await Weapon.create({id: 'Weapon/IronSword#2021',lvl: 3});
     /*
     await Gear.create({
         id: "UfusKomono#1234",
-        lvl: 1,
+        lvl: 3,
         HP: 1000,
         ATK: 2892489,
         CRITRATE: 0.0,
@@ -178,7 +178,7 @@ async function initialize() {
     });
     await Gear.create({
         id: "UfusKomono#1284",
-        lvl: 1,
+        lvl: 3,
         HP: 1000,
         ATK: 2892489,
         CRITRATE: 0.0,
@@ -186,15 +186,16 @@ async function initialize() {
     });
     await Gear.create({
         id: "UfusKomono#8234",
-        lvl: 1,
+        lvl: 3,
         HP: 1000,
         ATK: 2892489,
         CRITRATE: 0.0,
         CRITDMG: 0.0
     });
-    */
+   */
    //var user = await User.findOne({where: {id: "450385597631299594"}});
-   //user.gear = "Weapon/IronSword#2021-UfusKomono#1234-UfusKomono#1284-UfusKomono#8234";
+   //user.gear = "Weapon/IronSword#2021";
+   //user.bones = 100000000;
    //await user.save();
 }
 
@@ -359,6 +360,17 @@ sequelize.authenticate().then(() => {
         }
         return false;
     },
+
+    async levelGear(id) {
+        const gear = await Gear.findOne({where: {id:id}});
+        const currentLvl = await gear.lvl;
+        await gear.update({lvl: currentLvl+1});
+    },
+    async levelWeapon(id) {
+        const weapon = await Weapon.findOne({where: {id:id}});
+        const currentLvl = await weapon.lvl;
+        await weapon.update({lvl: currentLvl+1});
+    },
     async TrainNewGoGo(userID,gogoID) {
         const user = await User.findOne({where: {id:userID}});
         await user.update({training: gogoID});
@@ -369,11 +381,15 @@ sequelize.authenticate().then(() => {
         const user = await User.findOne({where: {id:userID}});
         const gear = await Gear.findOne({where: {id: gearID}});
         await gear.destroy();
-        var m = user.gear.split('-');
-        m = m.filter(g => !(g == gearID));
-        var n = ""
+        var all = user.gear.split('-');
+        m = all.filter(g => !(g == gearID));
+        var n = "";
         for (let i=0; i<m.length; i++) {
+            if (m[i] == '') {continue};
             n = n+m[i];
+            if (i != 0 || i != m.length - 1) {
+                n = n+'-';
+            }
         }
         user.gear = n;
         await user.save();
@@ -383,11 +399,15 @@ sequelize.authenticate().then(() => {
         const user = await User.findOne({where: {id:userID}});
         const weapon = await Weapon.findOne({where: {id: weaponID}});
         await weapon.destroy();
-        var m = user.gear.split('-');
-        m = m.filter(g => !(g == weaponID));
+        var all = user.gear.split('-');
+        m = all.filter(g => !(g == weaponID));
         var n = "";
         for (let i=0; i<m.length; i++) {
+            if (m[i] == '') {continue};
             n = n+m[i];
+            if (i != 0 || i != m.length - 1) {
+                n = n+'-';
+            }
         }
         user.gear = n;
         await user.save();

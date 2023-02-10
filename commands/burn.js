@@ -95,6 +95,7 @@ module.exports = {
                         if (mode == "Gear") {await database.burnGear(interaction.user.id.toString(),master[i]);}
                         else {await database.burnWeapon(interaction.user.id.toString(),master[i]);}
                     }
+                    // ALSO HAVE TO REMOVE FROM GOGOS!!!!!
                     // message "you got bones!" embed here
                     await interaction.editReply("Burned...");
                     return;

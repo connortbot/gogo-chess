@@ -65,8 +65,9 @@ async function createEmbed(gogo,interaction) {
         }
     }
     if (gogo.weapon != '') {
+        console.log(gogo.weapon);
         const weapon = await database.getWeapon(gogo.weapon);
-        var boosts = await calculator.calcWeaponStats(gogo.weapon.split('#')[0],weapon.lvl);
+        var boosts = await calculator.calcWeaponStats(gogo.weapon.split('#')[0].split('/')[1],weapon.lvl);
         console.log(boosts);
         gogoATKBoost += boosts[0];
         gogoCRBoost += boosts[1];
@@ -80,7 +81,7 @@ async function createEmbed(gogo,interaction) {
     gogoCDBoost = parseFloat(gogoCDBoost.toFixed(3).toString());
     var weaponKey
     if (gogo.weapon != '') {
-        weaponKey = gogo.weapon.split('#')[0]
+        weaponKey = gogo.weapon.split('#')[0].split('/')[1];
     } else {
         weaponKey = ''
     }

@@ -137,6 +137,7 @@ client.on(Events.InteractionCreate, async interaction => {
 				i -= 1;
 			}
 		}
+		console.log(lst);
 		if (lst.length == 0) {
 			embed.setTitle(interaction.user.username+" as no Weapons!");
 			return
@@ -159,6 +160,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		} else {
 			l = 5;
 		}
+		console.log(lst);
 		for (let i=0; i<l; i++) {
 			var tWeapon = await database.getWeapon(lst[i]);
 			const weaponBoosts = await calculator.calcWeaponStats(lst[i].split('#')[0].split('/')[1],tWeapon.lvl);
@@ -179,6 +181,7 @@ client.on(Events.InteractionCreate, async interaction => {
 				i -= 1;
 			}
 		}
+		console.log(lst);
 		if (lst.length == 0 || (lst.length == 1 && lst[0] == '')) {
 			embed.setTitle(interaction.user.username+" as no Gear!");
 			return
