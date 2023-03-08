@@ -1,6 +1,6 @@
 # gogo-chess 0.2.8
 
-== GOGO CHESS 0.2.7 ==
+== GOGO CHESS 0.2.8 ==
 Discord Bot for the DMRPG, GoGo World. Run using the Discord.js library.
 
 GoGo Chess is an RPG that can be run on your very own Discord server! Primarily on the main GoGo World server, which will be posted here in v0.4.0.
