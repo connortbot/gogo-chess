@@ -16,20 +16,58 @@ async function calcWeaponStats(weaponIdentifier,weaponlvl) {
     return [parseFloat(atkBoost.toFixed(2).toString()),parseFloat(crBoost.toFixed(3).toString(3)),parseFloat(cdBoost.toFixed(3).toString())];
 }
 
+const wscalers = {
+    3: 1.4,
+    4: 1.6,
+    5: 2.0,
+}
+
+const gscalers = {
+    3: {
+        1: 1.0,
+        2: 1.1,
+        3: 1.1,
+        4: 1.2,
+        5: 1.5
+    },
+    4: {
+        1: 1.0,
+        2: 1.1,
+        3: 1.2,
+        4: 1.2,
+        5: 1.6
+    },
+    5: {
+        1: 1.0,
+        2: 1.2,
+        3: 1.5,
+        4: 1.5,
+        5: 2.0
+    }
+}
+
+async function applyLvLBuffs(i,rarity,lvl) {
+    for (let i=1; i<lvl+1; i++) {
+        i = i*gscalers[rarity][i];
+    }
+    return i;
+}
 
 module.exports = {
     async calcWeaponStats(weaponIdentifier,weaponlvl) {
-        const atkBoost = (Weapons[weaponIdentifier]["ATK"])*((weaponlvl/10) + 1);
+        var sboost = 0;
         const scalerType = Weapons[weaponIdentifier]["scaler"];
-        var crBoost
-        var cdBoost 
+        var crBoost = 0;
+        var cdBoost = 0;
         if (scalerType=="dmg") {
-            cdBoost = (Weapons[weaponIdentifier]["CRITDMG"])*((weaponlvl/10)+1)
-            crBoost = (Weapons[weaponIdentifier]["CRITDMG"])
+            sboost = 0.20;
+            cdBoost += (Weapons[weaponIdentifier]["CRITDMG"]);
+            crBoost += (Weapons[weaponIdentifier]["CRITRATE"]);
         } else if (scalerType=="rate") {
-            cdBoost = (Weapons[weaponIdentifier]["CRITDMG"])
-            crBoost = (Weapons[weaponIdentifier]["CRITDMG"])*((weaponlvl/10)+1)
+            cdBoost += (Weapons[weaponIdentifier]["CRITDMG"])*((1.2)^abs(1-weaponlvl));
+            crBoost += (Weapons[weaponIdentifier]["CRITRATE"]);
         }
+        const atkBoost = (Weapons[weaponIdentifier]["ATK"])*((wscalers[Weapons[weaponIdentifier]["rarity"]]+sboost)^Math.abs(1-weaponlvl));
         return [parseFloat(atkBoost.toFixed(2).toString()),parseFloat(crBoost.toFixed(3).toString(3)),parseFloat(cdBoost.toFixed(3).toString())];
     },
     async calcGoGoStats(gogo) {
@@ -46,15 +84,16 @@ module.exports = {
         for (let i=0; i<3; i++) {
             if (gears[i] != '') {
                 const gear = await database.getGear(gears[i]);
+                const gear_rarity = Gear[gears[i].split('#')[0]]["rarity"];
                 if (gear.ATK >= 1) {
-                    gogoATKBoost += gear.ATK;
+                    gogoATKBoost += applyLvlBuffs(gear.ATK,gear_rarity,gear.lvl);
                 } else {
-                    gogoATKBoost += gear.ATK*gogoATK;
+                    gogoATKBoost += applyLvlBuffs(gear.ATK,gear_rarity,gear.lvl)*gogoATK;
                 }
                 if (gear.HP >= 1) {
-                    gogoHPBoost += gear.HP;
+                    gogoHPBoost += applyLvlBuffs(gear.HP,gear_rarity,gear.lvl);;
                 } else {
-                    gogoHPBoost += gear.HP*gogoHP;
+                    gogoHPBoost += applyLvlBuffs(gear.HP,gear_rarity,gear.lvl)*gogoHP;
                 }
                 gogoCRBoost += gear.CRITRATE;
                 gogoCDBoost += gear.CRITDMG;

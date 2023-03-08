@@ -51,7 +51,7 @@ module.exports = {
         console.log(weapon);
         var embed
         if (weapon.length == 1) {
-            const lostWeaponGoGo = await database.WeaponizeGoGo(gogo,weapon[0].split('/')[1],interaction.user.id.toString());
+            const lostWeaponGoGo = await database.WeaponizeGoGo(gogo,weapon[0],interaction.user.id.toString());
             if (lostWeaponGoGo != 'firstWeaponize') {
                 embed = new EmbedBuilder()
                     .setTitle(interaction.user.username+"'s "+lostWeaponGoGo.split("#")[0]+" unequipped the "+Weapons[weapon[0].split('#')[0].split('/')[1]]["name"]+".");
@@ -70,11 +70,11 @@ module.exports = {
             var pageButtons = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setCustomId('prevPage-specificweapon+'+Weapons[weapon[0].split('#')[0].split('/')[1]]+'-0')
+                        .setCustomId('prevPage-specificweapon+'+Weapons[weapon[0].split('#')[0]]+'-0')
                         .setLabel('Previous')
                         .setStyle(ButtonStyle.Secondary),
                     new ButtonBuilder()
-                        .setCustomId('nextpage-specificweapon+'+Weapons[weapon[0].split('#')[0].split('/')[1]]+'-0')
+                        .setCustomId('nextpage-specificweapon+'+Weapons[weapon[0].split('#')[0]]+'-0')
                         .setLabel('Next')
                         .setStyle(ButtonStyle.Secondary),
             )
