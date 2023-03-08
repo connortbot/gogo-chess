@@ -1,13 +1,17 @@
 // REQUIRED MODULES: NODE: SEQUELIZE, DISCORD.JS
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, IntentsBitField } = require('discord.js');
 const { token, dojo } = require('./config.json');
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
 const battles = require('./battles');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessageReactions] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, 
+	GatewayIntentBits.GuildMessageReactions, 
+	GatewayIntentBits.GuildMessages, 
+	GatewayIntentBits.MessageContent, 
+	GatewayIntentBits.Guilds,] });
 const database = require('./database');
 const schedule = require('node-schedule');
 const { channel } = require('node:diagnostics_channel');
@@ -44,11 +48,13 @@ client.on(Events.InteractionCreate, async interaction => {
 		console.error(`No command matching ${interaction.commandName} was found.`);
 		return;
 	}
-
+	const user = await database.getUser(interaction.user.id.toString());
+	console.log(interaction.commandName);
+	if (user === null && interaction.commandName != 'register') {
+		interaction.reply('You are not a registered user! Try **/register** to join GoGo World.')
+		return;
+	}
     try {
-		// Example Testing Battles
-		const channel = client.channels.cache.get("1038200097743315017");
-		battles.start_battle(["Sumon#0"],["Monster/Kaeda"],channel);
         await command.execute(interaction);
 
 	} catch (error) {
@@ -57,7 +63,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-//GEARING GOGOS
+//SELECT MENUS
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isSelectMenu()) return;
 	if (interaction.customId.startsWith('selectGear')) {
@@ -79,8 +85,10 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
+// LIST MENUS (e.g Inventory, gear, weapon)
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isButton()) return;
+	console.log(interaction);
 	await interaction.deferUpdate();
 	var embed = new EmbedBuilder()
             .setColor(0xFF5634)
@@ -89,6 +97,7 @@ client.on(Events.InteractionCreate, async interaction => {
     const gear = user.gear;
     const gogos = user.inventory;
 	// Menu to Show GoGos
+	// INVENTORY COMMAND //
 	if (interaction.customId === 'showGoGos') {
 		const lst = gogos.split('-');
 		if (lst.length == 0) {
@@ -170,7 +179,7 @@ client.on(Events.InteractionCreate, async interaction => {
 				i -= 1;
 			}
 		}
-		if (lst.length == 0) {
+		if (lst.length == 0 || (lst.length == 1 && lst[0] == '')) {
 			embed.setTitle(interaction.user.username+" as no Gear!");
 			return
 		}
@@ -211,10 +220,15 @@ client.on(Events.InteractionCreate, async interaction => {
 		}
 		await interaction.editReply({embeds: [embed],components: [pageButtons]});
 	}
+
+	// NEXT AND PREV PAGE // ** ALL COMMANDS **
 	if (interaction.customId.startsWith('prevPage') || interaction.customId.startsWith('nextpage')) {
+		// all commands will have custom IDs (e.g the button ID for the /weapon command is nextpage-specificweapon-0)
 		const type = interaction.customId.split('-')[1];
 		const page = interaction.customId.split('-')[2];
 		var lst
+
+		// INVENTORY COMMAND // [compile gear/weapon lists]
 		if (type == 'gogo') {
 			lst = gogos.split('-');
 		} else if (type == 'weapon') {
@@ -234,7 +248,24 @@ client.on(Events.InteractionCreate, async interaction => {
 				}
 			}
 		}
-		const msg = interaction.message;
+
+		var weapon = [];
+		// WEAPON COMMAND // [compile specific weapon list]
+		if (type.startsWith('specificweapon')) {
+			for (let i=0; i<gear.length; i++) {
+				if (gear[i].startsWith("Weapon/")) {
+					for (let k in Weapons) {
+						if (interaction.options.getString('weapon')==Weapons[k]["name"]) {
+							if (gear[i].startsWith("Weapon/"+k)) {
+								weapon.push(gear[i]);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// GENERAL LISTS //	
 		if ((parseInt(page)-1) == 0 && interaction.customId.startsWith('prevPage')) {
 			return
 		}
@@ -295,6 +326,24 @@ client.on(Events.InteractionCreate, async interaction => {
 				description += ", CRIT DMG "+(g.CRITDMG*100).toString()+"%";
 				embed.addFields(
 					{ name: "`"+(i+1).toString()+".` "+"**"+Gear[lst[i].split('#')[0]]["name"]+"**", value: description+"*"});
+			} else if (type.startsWith('specificweapon')) {
+				var tWeapon = await database.getWeapon(weapon[i]);
+				const weaponBoosts = await calculator.calcWeaponStats(weapon[i].split('#')[0].split('/')[1],tWeapon.lvl);
+				const descATK = ", ATK "+weaponBoosts[0].toString()
+				const descCR = ", CRIT RATE "+(weaponBoosts[1]*100).toString()+"%"
+				const descCD = ", CRIT DMG "+(weaponBoosts[2]*100).toString()+"%"
+				const userGoGos = user.inventory.split('-');
+				var owner = " [Owned by no one.]"
+				for (let i=0; i<userGoGos.length; i++) {
+					var nGoGo = await database.getGoGo(userGoGos[i]);
+					if (nGoGo.weapon == weapon[i]) {
+						owner = " [Owned by "+userGoGos[i].split('#')[0]+"]"
+					}
+				}
+				const description = "*LVL "+tWeapon.lvl.toString()+descATK+descCR+descCD+owner+"*";
+				//(weaponBoosts[0]+Weapons[lst[i].split('#')[0].split('/')[1]]["ATK"])
+				embed.addFields(
+					{ name: "`"+(i+1).toString()+".` "+"**"+Weapons[lst[i].split('#')[0].split('/')[1]]["name"]+"**", value: description});
 			}
 		}
 		await interaction.editReply({embeds: [embed],components: [pageButtons]});

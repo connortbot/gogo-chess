@@ -1,12 +1,25 @@
 {
     "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff), targeting,name]",
     "_comment2": "RANGE is set to Nearest/Farthest/Random",
-
+    "SellValues": {
+        "Gear": {
+            "1": 50,
+            "2": 100,
+            "3": 200,
+            "4": 400,
+            "5": 1000
+        },
+        "Weapons": {
+            "3": 100,
+            "4": 10000,
+            "5": 1000000
+        }
+    },
     "NormalGoGos": {
         "Sumon": {
             "type": "AD",
             "ATK": 5,
-            "HP": 1000,
+            "HP": 100,
             "CRITRATE": 0.1,
             "CRITDMG": 0.5,
             "ABILITY": ["damage",5.0,"","Nearest","BITE"],
@@ -22,8 +35,37 @@
     },
 
     "Monsters": {
-        "Kaeda": {
+        "Spider": {
+            "type": "AD",
+            "HP": 50,
+            "ATK": 1,
+            "CRITRATE": 0.05,
+            "CRITDMG": 0.10,
+            "ABILITY": ["damage",2.0,"","Nearest","BITE"],
+            "COOLDOWN": 10
+        },
+        "Big Spider": {
+            "type": "AD",
+            "HP": 50,
+            "ATK": 8,
+            "CRITRATE": 0.20,
+            "CRITDMG": 0.50,
+            "ABILITY": ["damage",4.0,"","Nearest","STAB"],
+            "COOLDOWN": 4
+        },
+        "Spider Queen": {
+            "type": "AD",
+            "HP": 80,
+            "ATK": 10,
+            "CRITRATE": 0.20,
+            "CRITDMG": 0.80,
+            "ABILITY": ["damage",8.0,"","Nearest","POISON LUNGE"],
+            "COOLDOWN": 8
+        },
+        
+        "Dragon K'aeda": {
             "type": "AP",
+            "HP": 1000,
             "ATK": 50,
             "CRITRATE": 0.20,
             "CRITDMG": 0.80,
@@ -31,6 +73,9 @@
             "COOLDOWN": 8
         }
     },
+
+
+
 
     "Weapons": {
         "": {
@@ -42,7 +87,8 @@
             "ATK": 10,
             "CRITRATE": 0,
             "CRITDMG": 0.01,
-            "scaler": "dmg"
+            "scaler": "dmg",
+            "rarity": 3
         }
     },
 
@@ -53,11 +99,25 @@
         },
         "UfusKomono": {
             "name": "Ufus Komono",
+            "rarity": 1,
             "HP": 0.1,
             "ATK": 5,
             "CRITRATE": 0.05,
             "CRITDMG": 0.06,
             "alias": "UK"
+        }
+    },
+
+
+
+
+
+    "Dungeons": {
+        "Spider's Lair": {
+            "name": "Spider's Lair",
+            "loot": "UfusKomono",
+            "recommended_lvl": 5,
+            "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
         }
     }
 }

@@ -6,15 +6,15 @@ const { removeGoGo } = require("../database");
 
 
 // actions: get the gogo - determine if the gogo is in possession 
-//                       - determine the number of rolls that will be acquired as a result of selling the gogo
+//                       - determine the number of bones that will be acquired as a result of selling the gogo
 //                       - remove the gogo from the database 
 //                            (Clear both existance as a gogo in database as well as from the inventory of the user) 
-//                       - Update user's quantity of rolls 
+//                       - Update user's quantity of bones 
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sell')
-        .setDescription('Sell your pathethic gogos away for some rolls!')
+        .setDescription('Sell your pathethic gogos away for some bones!')
         .addStringOption((option) =>
             option
                 .setName('name')
@@ -40,8 +40,8 @@ module.exports = {
 
             if (name === gogoName) {
                 // do all the stuff here
-                await db.removeGoGo(posGoGo[i]); // call the removeGoGo function (since nothing is returned, cant even store it in a const or var)
-                await user.update({rolls: user.rolls+sellValue});
+                await db.removeGoGo(interaction.user.id.toString(),posGoGo[i]); // call the removeGoGo function (since nothing is returned, cant even store it in a const or var)
+                await user.update({bones: user.bones+sellValue});
                 await interaction.reply("You've successfully received **"+sellValue.toString()+"** for selling " + gogoName); //this will be the final output (reply) back to user once all the computation has be done 
             }
         }
