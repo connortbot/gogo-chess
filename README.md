@@ -1,4 +1,4 @@
-# gogo-chess 0.2.7
+# gogo-chess 0.2.8
 
 == GOGO CHESS 0.2.7 ==
 Discord Bot for the DMRPG, GoGo World. Run using the Discord.js library.
