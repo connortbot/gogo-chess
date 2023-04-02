@@ -8,9 +8,12 @@ const { token, dojo } = require('./config.json');
 const { Gear, Weapons, NormalGoGos, Monsters } = require('./balance.json');
 const { waitForDebugger } = require("node:inspector");
 
-// battle_loop: (Array: GoGoIDs) for each player team) (Array: GoGo/Boss/MonsterIDs) (Array: (Array: side,userID)) (Discord: Channel)
- // => Runs through a battle.
- // => s2 max_size = 4
+/**
+ * Runs through a battle loop between two given sides.
+ * @param {Array} s1 - Array for GogoIDs for side 1
+ * @param {Array} s2 - Array for opposing player team IDs or Boss/Monster IDs
+ * @param {Channel} channel - Channel that the battle was called in.
+ */
 async function battle_loop(s1,s2,channel) {
     if (s1.length == 1 && s1[0] == '') {
         await channel.send("...one of the sides does not have a team! (Use **/team** to set up a team.)");
