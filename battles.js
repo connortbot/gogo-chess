@@ -4,7 +4,6 @@ const calculator = require("./calculator");
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin } = require('discord.js');
-const { token, dojo } = require('./config.json');
 const { Gear, Weapons, NormalGoGos, Monsters } = require('./balance.json');
 const { waitForDebugger } = require("node:inspector");
 
