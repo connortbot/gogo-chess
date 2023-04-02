@@ -4,6 +4,12 @@ const { Collection, Events, ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBui
 const { NormalGoGos, Weapons, Gear, Dungeons, SellValues } = require('../balance.json');
 const battles = require('../battles');
 
+/**
+ * Rolls a specified amount of rolls on standard banner.
+ * @param {*} interaction - Interaction object
+ * @change - Better, more optimized messages to send.
+ * @complexity - O(n^2)
+ */
 async function execute(interaction) {
     await interaction.deferReply();
     const rolls = interaction.options.getInteger('rolls');
@@ -33,8 +39,6 @@ async function execute(interaction) {
     }
     await interaction.editReply("Best of luck!");
 }
-
-
 
 module.exports = {
     data: new SlashCommandBuilder()
