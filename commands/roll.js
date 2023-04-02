@@ -40,7 +40,6 @@ async function execute(interaction) {
     await interaction.editReply("Best of luck!");
 }
 
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('roll')

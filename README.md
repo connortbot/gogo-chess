@@ -1,6 +1,5 @@
-# gogo-chess 0.2.8
+# GoGo Chess 0.3.0
 
-== GOGO CHESS 0.2.8 ==
 Discord Bot for the DMRPG, GoGo World. Run using the Discord.js library.
 
 GoGo Chess is an RPG that can be run on your very own Discord server! Primarily on the main GoGo World server, which will be posted here in v0.4.0.
@@ -8,14 +7,9 @@ Inspired by the likes of Pokebot, Genshin Impact, and other RPGs, this game invo
 
 Although the game/bot is not open to the public (not until v0.4.0, that is), you'll be able to see current events below!
 
-
-PATCH NOTES (v0.3.0)
-
-Currently, the project is built on a local SQLITE3 database. It is not maintained within this git.
-Running the program will create it - just remember to run:
-`global_counter.create({call: 0, counter: 0});`
-This will create the only required template for the database.
+If you are interested in developement or helping out, or even just have feedback, please do not hesitate to contact my student email: ctloi@uwaterloo.ca
 
 
 The current roadmap and desired changes can be viewed in the document:
 https://docs.google.com/document/d/12rIztN3OUnvRIRQI2E6sNrMMYkSZaTE1vgR2ZnqbkWs/edit?usp=sharing
+Currently, the wiki is being updated with game info and developement info. If you want to track development, consider giving it a read!
