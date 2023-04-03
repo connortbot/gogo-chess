@@ -70,11 +70,11 @@ module.exports = {
             var pageButtons = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setCustomId('prevPage-specificweapon+'+Weapons[weapon[0].split('#')[0]]+'-0')
+                        .setCustomId('prevPage-' + interaction.user.id.toString() + '-specificweapon+' + Weapons[weapon[0].split('#')[0]]+'-0')
                         .setLabel('Previous')
                         .setStyle(ButtonStyle.Secondary),
                     new ButtonBuilder()
-                        .setCustomId('nextpage-specificweapon+'+Weapons[weapon[0].split('#')[0]]+'-0')
+                        .setCustomId('nextPage-' + interaction.user.id.toString() + '-specificweapon+' + Weapons[weapon[0].split('#')[0]]+'-0')
                         .setLabel('Next')
                         .setStyle(ButtonStyle.Secondary),
             )
