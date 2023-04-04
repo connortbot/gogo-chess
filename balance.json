@@ -41,6 +41,19 @@
 
 
             "description": "Lackey is a laid back alien from a planet known for bountiful tomfoolery. Equipped with alcohol, Lackey is ready to take on any opponent at a moments notice, after a couple drinks that is."
+        },
+        "Ufus":{
+            "type": "AD",
+            "ATK": 3,
+            "HP": 150,
+            "CRITRATE": 0.05,
+            "CRITDMG": 0.7,
+            "ABILITY": ["damage",3.0,"","Nearest","HOOK"],
+            "rarity": "Normal",
+            "COOLDOWN": 5,
+
+
+            "description": "Ufus is a giant masked creature with a pair of red boxing gloves. His large torso absorbs a great deal of damage making him a difficult rival to knockout."
         }
     },
     "MostWantedGoGos": {
