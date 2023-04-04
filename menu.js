@@ -2,7 +2,7 @@
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
 const battles = require('./battles');
-const database = require('../database');
+const database = require('./database');
 const { ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 /**

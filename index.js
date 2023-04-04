@@ -6,6 +6,7 @@ const { token, dojo } = require('./config.json');
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
 const battles = require('./battles');
+const menu = require('./menu');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, 
 	GatewayIntentBits.GuildMessageReactions, 
@@ -62,7 +63,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // SELECT MENUS
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isSelectMenu()) return;
+	if (!interaction.isStringSelectMenu()) return;
 	if (interaction.customId.split('-')[1] != interaction.user.id.toString()) return;
 	if (interaction.customId.startsWith('selectGear')) {
 		await equipGear_SELECTMENU(interaction);
@@ -72,6 +73,7 @@ client.on(Events.InteractionCreate, async interaction => {
 // LIST MENUS (e.g Inventory, gear, weapon)
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isButton()) return;
+	if (interaction.customId.split('-')[1] != interaction.user.id.toString()) return;
 	var embed = new EmbedBuilder()
             .setColor(0xFF5634)
             .setTitle(interaction.user.username)
@@ -81,7 +83,6 @@ client.on(Events.InteractionCreate, async interaction => {
 	
 	// INVENTORY COMMAND //
 	if (interaction.customId.startsWith('showGoGos')) {
-		if (interaction.customId.split('-')[1] != interaction.user.id.toString()) return;
 		await interaction.deferUpdate();
 		const lst = gogos.split('-');
 		if (lst.length == 0) {

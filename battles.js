@@ -98,7 +98,6 @@ async function battle_loop(s1,s2,channel) {
                         const fdmg = damage*ability[1];
                         if (ability[3]=="Nearest") {
                             side2[0]["HP"] = side2[0]["HP"]-fdmg;
-    
                         // Create embeded text for the ith iteration of the loop 
                         const embeddedText = new EmbedBuilder() 
                         .setColor(0xad11f5) // #ad11f5 purple 
@@ -106,7 +105,6 @@ async function battle_loop(s1,s2,channel) {
 
                         // sends the message into the channel defined in index 
                         await channel.send({ embeds: [embeddedText] }); 
-                        // await channel.send(thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!"); - original non-embeded message
                         }
                     }
                 }
