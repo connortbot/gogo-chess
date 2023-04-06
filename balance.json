@@ -133,9 +133,5 @@
             "recommended_lvl": 5,
             "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
         }
-    },
-
-    "Banner": {
-        
     }
 }
