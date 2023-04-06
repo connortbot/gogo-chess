@@ -18,9 +18,11 @@ module.exports = {
         const limits = user.fight_limits.split('-');
         if (limits[0] === '1') {
             await interaction.reply("You have already defeated the boss!");
+            return;
         }
         if (limits[2] == '1') {
             await interaction.reply("You are currently fighting elsewhere. Wait for that battle to finish first, and come back.");
+            return;
         }
         await interaction.deferReply();
         const coop = interaction.options.getMentionable('teammateone');
@@ -48,7 +50,7 @@ module.exports = {
             }
             // Defeated the Boss
             await interaction.channel.send('There is no loot currently available for this boss.');
-            user.fight_limits = '1-${limits[1]}-${limits[2]}-${limits[3]}';
+            user.fight_limits = `1-${limits[1]}-${limits[2]}-${limits[3]}`;
             await user.save();
             await interaction.editReply(interaction.user.username+' defeated the boss!');
         } else {
@@ -88,9 +90,9 @@ module.exports = {
                         }
                         // Defeated the Dungeon
                         await interaction.channel.send('There is no loot currently available for this boss.');
-                        user.fight_limits = '1-${limits[1]}-${limits[2]}-${limits[3]}';
+                        user.fight_limits = `1-${limits[1]}-${limits[2]}-${limits[3]}`;
                         await user.save();
-                        coopUser.fight_limits = '1-${limits[1]}-${limits[2]}-${limits[3]}';
+                        coopUser.fight_limits = `1-${limits[1]}-${limits[2]}-${limits[3]}`;
                         await coopUser.save();
                         await interaction.editReply(interaction.user.username+"slayed K'aeda with "+coop.username+".");
                     } else {

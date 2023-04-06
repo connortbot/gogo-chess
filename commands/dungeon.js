@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, UserFlags } = require('discord.js');
 const database = require('../database');
 const { Collection, Events, ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder } = require('discord.js');
 const { NormalGoGos, Weapons, Gear, Dungeons } = require('../balance.json');
@@ -6,14 +6,14 @@ const battles = require('../battles');
 
 async function updateLimits(users) {
     const date = new Date();
-    const curr_date = '${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()}';
-    for (let i=0; i<user.length; i++) {
+    const curr_date = `${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()}`;
+    for (let i=0; i<users.length; i++) {
         let user = users[i];
         let limits = user.fight_limits.split('-')
         if (limits[3] !== curr_date) {
-            user.fight_limits = '${limits[0]}-1-${limits[2]}-${curr_date}';
+            user.fight_limits = `${limits[0]}-1-${limits[2]}-${curr_date}`;
         } else {
-            user.fight_limits = '${limits[0]}-${limits[1]+1}-${limits[2]}-${curr_date}';
+            user.fight_limits = `${limits[0]}-${limits[1]+1}-${limits[2]}-${curr_date}`;
         }
         await user.save();
     }
@@ -36,14 +36,16 @@ module.exports = {
                 .setDescription('Ping your teammate!'),),
     async execute(interaction) {
         const date = new Date();
-        const curr_date = '${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()}'
+        const curr_date = `${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()}`
         const user = await database.getUser(interaction.user.id.toString());
         const limits = user.fight_limits.split('-');
         if (limits[1] === '10' && limits[3] === curr_date) {
             await interaction.reply("You have run out of dungeon runs for today. Please come back tomorrow!");
+            return;
         }
         if (limits[2] === '1') {
             await interaction.reply("You are currently fighting elsewhere. Wait for that battle to finish first, and come back.");
+            return;
         }
         await interaction.deferReply();
         const dungeonName = Object.keys(Dungeons)[interaction.options.getInteger('number')-1];
@@ -53,7 +55,7 @@ module.exports = {
         }
         if (coop == null) {
             for (let i=0; i<Dungeons[dungeonName]["waves"].length; i++) {
-                var b = await battles.start_battle(user.team.split('-'),Dungeons[dungeonName]["waves"][i],interaction.channel);
+                var b = await battles.start_battle(user.team.split('-'),Dungeons[dungeonName]["waves"][i],interaction.channel,[user]);
                 if (b != "side1") {
                     // Failed the Fight
                     await updateLimits([user]);
@@ -99,7 +101,7 @@ module.exports = {
                                     uTeam.shift();
                                 }
                             }
-                            var b = await battles.start_battle(team,Dungeons[dungeonName]["waves"][i],interaction.channel);
+                            var b = await battles.start_battle(team,Dungeons[dungeonName]["waves"][i],interaction.channel,[user,coopUser]);
                             if (b != "side1") {
                                 // Failed the Fight
                                 await updateLimits([user,coopUser]);
