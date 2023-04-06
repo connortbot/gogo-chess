@@ -29,6 +29,19 @@
 
             "description": "Sumon is an angry, little alien whose home planet is completely unknown. His large, sharp teeth make for a formidable foe that few want to fight when he's angry."
         },
+        "Lackey": {
+            "type": "AD",
+            "ATK": 3,
+            "HP": 110,
+            "CRITRATE": 0.1,
+            "CRITDMG": 0.3,
+            "ABILITY": ["heal",10,"","Nearest","BOOZE"],
+            "rarity": "Normal",
+            "COOLDOWN": 3,
+
+
+            "description": "Lackey is a laid back alien from a planet known for bountiful tomfoolery. Equipped with alcohol, Lackey is ready to take on any opponent at a moments notice, after a couple drinks that is."
+        },
         "Ufus":{
             "type": "AD",
             "ATK": 3,
@@ -41,13 +54,11 @@
 
 
             "description": "Ufus is a giant masked creature with a pair of red boxing gloves. His large torso absorbs a great deal of damage making him a difficult rival to knockout."
-
         }
     },
     "MostWantedGoGos": {
 
     },
-
     "Monsters": {
         "Spider": {
             "type": "AD",
