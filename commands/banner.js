@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 
-const exampleEmbed = new EmbedBuilder()
+async function write_banner(interaction) {
+    const exampleEmbed = new EmbedBuilder()
 	.setColor(0x0099FF)
 	.setTitle('Some title')
 	.setDescription('Some description here')
@@ -15,4 +16,7 @@ const exampleEmbed = new EmbedBuilder()
 	.setImage('https://i.imgur.com/AfFp7pu.png')
 	.setTimestamp()
 	.setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
-    channel.send({ embeds: [exampleEmbed] });
+    await interaction.reply({ embeds: [exampleEmbed] });
+}
+
+
