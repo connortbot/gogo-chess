@@ -1,6 +1,8 @@
 {
     "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff), targeting,name]",
     "_comment2": "RANGE is set to Nearest/Farthest/Random",
+    "BannerTitle": "Age of Moon",
+    "BannerSubTitle": "",
     "SellValues": {
         "Gear": {
             "1": 50,
@@ -144,5 +146,17 @@
             "recommended_lvl": 5,
             "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
         }
+    },
+
+    "Banner": {
+        "Normal": {
+            "names": ["Hi", "Bye", "Goodbye"],
+            "description": ""
+        },
+
+        "MostWanted": {
+            "name": "Hi",
+            "description": "Bye"
+        } 
     }
 }
