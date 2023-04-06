@@ -14,10 +14,16 @@ module.exports = {
                 .setName('teammateone')
                 .setDescription('Ping your teammate!')),
     async execute(interaction) {
+        const user = await database.getUser(interaction.user.id.toString());
+        const limits = user.fight_limits.split('-');
+        if (limits[0] === '1') {
+            await interaction.reply("You have already defeated the boss!");
+        }
+        if (limits[2] == '1') {
+            await interaction.reply("You are currently fighting elsewhere. Wait for that battle to finish first, and come back.");
+        }
         await interaction.deferReply();
         const coop = interaction.options.getMentionable('teammateone');
-        // Needs to be a check if the player is even registered.
-        const user = await database.getUser(interaction.user.id.toString());
         if (user == null) {
             await interaction.editReply("You can't fight without joining GoGo World! Use **/register** to join today!")
             return
@@ -28,7 +34,7 @@ module.exports = {
         }
         if (coop == null) {
             for (let i=0; i<1; i++) {
-                var b = await battles.start_battle(user.team.split('-'),["Monster/Dragon K'aeda"],interaction.channel);
+                var b = await battles.start_battle(user.team.split('-'),["Monster/Dragon K'aeda"],interaction.channel,[user]);
                 console.log(b);
                 if (b != "side1") {
                     // Failed the Fight
@@ -40,11 +46,10 @@ module.exports = {
                     return
                 }
             }
-            // Defeated the Dungeon
-            //await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' upon clearing this dungeon.');
+            // Defeated the Boss
             await interaction.channel.send('There is no loot currently available for this boss.');
-            //const gearID = database.createNewGear(Dungeons[dungeonName]["loot"]);
-            //await database.giveGearWeapon(interaction.user.id.toString(),gearID);
+            user.fight_limits = '1-${limits[1]}-${limits[2]}-${limits[3]}';
+            await user.save();
             await interaction.editReply(interaction.user.username+' defeated the boss!');
         } else {
             const coopUser = await database.getUser(coop.user.id.toString());
@@ -75,17 +80,18 @@ module.exports = {
                             }
                         }
                         for (let i=0; i<1; i++) {
-                            var b = await battles.start_battle(team,["Monster/Dragon K'aeda"],interaction.channel);
+                            var b = await battles.start_battle(team,["Monster/Dragon K'aeda"],interaction.channel,[user,coopUser]);
                             if (b != "side1") {
                                 // Failed the Fight
                                 interaction.editReply('You failed the fight.');
                             }
                         }
                         // Defeated the Dungeon
-                        //await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' upon clearing this dungeon.');
                         await interaction.channel.send('There is no loot currently available for this boss.');
-                        //const gearID = database.createNewGear(Dungeons[dungeonName]["loot"]);
-                        //await database.giveGearWeapon(interaction.user.id.toString(),gearID);
+                        user.fight_limits = '1-${limits[1]}-${limits[2]}-${limits[3]}';
+                        await user.save();
+                        coopUser.fight_limits = '1-${limits[1]}-${limits[2]}-${limits[3]}';
+                        await coopUser.save();
                         await interaction.editReply(interaction.user.username+"slayed K'aeda with "+coop.username+".");
                     } else {
                         interaction.editReply('<@'+coop.id.toString()+"> doesn't want to fight. Until next time!");

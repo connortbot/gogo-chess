@@ -211,10 +211,28 @@ async function battle_loop(s1,s2,channel) {
 }
 
 module.exports = {
-    // start_battle: (Array: GoGoIDs) (Array: GoGo/Boss/MonsterIDs) (String: channelID)
-    // => Starts a battle.
-    async start_battle(s1,s2,channel) {
+    /**
+     * 
+     * @param {Array} s1 
+     * @param {Array} s2 
+     * @param {Channel} channel 
+     * @param {Array} players - List of all players involved in the battle.
+     * @returns 
+     */
+    async start_battle(s1,s2,channel,players) {
+        for (let i=0; i<players.length; i++) {
+            let p = players[i];
+            const limits = p.fight_limits.split('-');
+            p.fight_limits = '${limits[0]}-${limits[1]}-1-${limits[3]}';
+            await p.save();
+        }
         var b = await battle_loop(s1,s2,channel);
+        for (let i=0; i<players.length; i++) {
+            let p = players[i];
+            const limits = p.fight_limits.split('-');
+            p.fight_limits = '${limits[0]}-${limits[1]}-0-${limits[3]}';
+            await p.save();
+        }
         return b;
     }
 }

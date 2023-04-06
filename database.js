@@ -49,6 +49,9 @@ const User = sequelize.define('User', {
     mwrolls: {
         type: Sequelize.INTEGER
     },
+    fight_limits: {
+        type: Sequelize.STRING // [ defeated_boss (1/0) - # dungeon runs (0-10) - currently_active (1/0) - last_date_dungeon]
+    },
     team: {
         type: Sequelize.STRING
     }
@@ -170,6 +173,7 @@ async function createNewUser(userID) {
         bones: 0,
         rolls: 0,
         mwrolls: 0,
+        fight_limits: "0-0-0-0000_01_01",
         team: ""
     });
 }
@@ -393,22 +397,6 @@ async function initialize() {
     /*
     await Gear.create({
         id: "UfusKomono#1234",
-        lvl: 3,
-        HP: 1000,
-        ATK: 2892489,
-        CRITRATE: 0.0,
-        CRITDMG: 0.0
-    });
-    await Gear.create({
-        id: "UfusKomono#1284",
-        lvl: 3,
-        HP: 1000,
-        ATK: 2892489,
-        CRITRATE: 0.0,
-        CRITDMG: 0.0
-    });
-    await Gear.create({
-        id: "UfusKomono#8234",
         lvl: 3,
         HP: 1000,
         ATK: 2892489,

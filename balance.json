@@ -1,5 +1,5 @@
 {
-    "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff), targeting,name]",
+    "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff/revive, main scaling, targetstat(buff), targeting,name]",
     "_comment2": "RANGE is set to Nearest/Farthest/Random",
     "SellValues": {
         "Gear": {
@@ -31,7 +31,16 @@
         }
     },
     "MostWantedGoGos": {
-
+        "Lazarus": {
+            "type": "AP",
+            "ATK": 60,
+            "HP": 150,
+            "CRITRATE": 0.25,
+            "CRITDMG": 0.5,
+            "ABILITY": ["revive",0.75,"","Nearest","AMEN"],
+            "rarity": "MostWanted",
+            "COOLDOWN": 10
+        }
     },
 
     "Monsters": {
@@ -98,13 +107,24 @@
             "alias": "IOEJAFDKNSIEFSDLIHKUDJLIHSUDJLAHKEIUDLUF"
         },
         "UfusKomono": {
-            "name": "Ufus Komono",
+            "name": "Ufus' Komono",
             "rarity": 3,
             "HP": 0.1,
             "ATK": 5,
             "CRITRATE": 0.05,
             "CRITDMG": 0.06,
             "alias": "UK"
+        },
+
+        
+        "AdamCross": {
+            "name": "Adams Cross",
+            "rarity": 5,
+            "HP": 0.2,
+            "ATK": 10,
+            "CRITRATE": 0.2,
+            "CRITDMG": 0.1,
+            "alias": "AC"
         }
     },
 
