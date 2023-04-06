@@ -15,5 +15,4 @@ const exampleEmbed = new EmbedBuilder()
 	.setImage('https://i.imgur.com/AfFp7pu.png')
 	.setTimestamp()
 	.setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
-
-channel.send({ embeds: [exampleEmbed] });
+    return EmbedBuilder;
