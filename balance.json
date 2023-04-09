@@ -1,8 +1,13 @@
 {
     "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff, main scaling, targetstat(buff), targeting,name]",
     "_comment2": "RANGE is set to Nearest/Farthest/Random",
+<<<<<<< HEAD
     "BannerTitle": "Dan Devious Dubious Demon Dungeon",
     "Subtitle": "GoGo Roll Event",
+=======
+    "BannerTitle": "Age of Moon",
+    "BannerSubTitle": "",
+>>>>>>> 143c0b9130754434be92293f1c5c486b11bbcb6b
     "SellValues": {
         "Gear": {
             "1": 50,

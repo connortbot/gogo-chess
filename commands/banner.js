@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Variable Declarations: 
 //     1. Const - Global Data, use as much as possible as more memory efficient
 //     2. Var - Modulo scope, remains in memory after you finish the function so it's bad  for memory
@@ -16,6 +17,25 @@ module.exports = {
 
         //Display banner data
 
+=======
+const { SlashCommandBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
+const { Banner, BannerTitle, BannerSubTitle } = require('../balance.json');
+
+module.exports = {
+    data: new SlashCommandBuilder()
+    .setName('banner')
+    .setDescription('Sell your pathethic gogos away for some bones!')
+    .addStringOption((option) =>
+            option
+                .setName('name')
+                .setDescription('Name of your GoGo')
+                .setRequired(true)
+
+        ),
+
+     async execute(interaction) {
+>>>>>>> 143c0b9130754434be92293f1c5c486b11bbcb6b
         // Example on how to access json dictionaries
         //     const banner = bannerTitle - pointless;
         //     const asdsa = Banners["Wanted"]["name1"]; - only needed if you use it multiple times
@@ -25,6 +45,7 @@ module.exports = {
             /*
             for (let i=0; i<p.length; i++) {
                 let name = p[i];
+<<<<<<< HEAD
                 bannerEmbed.addFields({ name: name+" :white_check_mark:", value: 'Promoted GoGo!!' })
             }
             */
@@ -46,3 +67,31 @@ module.exports = {
     }
 }
 
+=======
+                write_banner.addFields({ name: name+" :white_check_mark:", value: 'Promoted GoGo!!' })
+            }
+            */
+        
+            let banner = Banner["Wanted"]
+
+            for (let i=0; i<banner[i]; i++) {
+                let name = banner[i];
+                write_banner.addFields({ name: name, value:'Promoted Go!!' })
+            }
+            await interaction.reply();
+     }
+
+
+}
+
+async function write_banner(interaction) {
+    const exampleEmbed = new EmbedBuilder()
+	.setColor(0x0099FF)
+	.setTitle(BannerTitle)
+	.setDescription(BannerSubTitle)
+	.setImage('https://i.imgur.com/AfFp7pu.png')
+    await interaction.reply({ embeds: [exampleEmbed] });
+}
+
+
+>>>>>>> 143c0b9130754434be92293f1c5c486b11bbcb6b
