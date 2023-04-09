@@ -375,7 +375,7 @@ async function initialize() {
 
     // ============== NEW DEV ENVIRONMENT ====================
     // Add the following line when setting up your first time local development database. Run the bot once, and then comment the line.
-    await global_counter.create({call: 0, counter: 0});
+    // await global_counter.create({call: 0, counter: 0});
 
 
     // ============== TESTING ====================

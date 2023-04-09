@@ -3,9 +3,9 @@
 //     2. Var - Modulo scope, remains in memory after you finish the function so it's bad  for memory
 //     3. Let - Same as var, 
 
-const { SlashCommandBuilder } = require('discord.js');
-const { Banners, BannerTitle, Subtitle} = require('./balance.json');
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
+const { Banners, BannerTitle, Subtitle} = require('../balance.json');
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('banner')
@@ -30,7 +30,7 @@ module.exports = {
             */
 
         const wantedBannerEmbed = new EmbedBuilder()
-            .setColor(0x0099FF)
+            .setColor(0x9F2B68)
             .setTitle(BannerTitle)
             // Possible implementation: 
             // .setURL('https://discord.js.org/') 
@@ -39,12 +39,10 @@ module.exports = {
 
         for (let i = 0; i < Banners["Wanted"]["names"].length; ++i) {
             let name = Banners["Wanted"]["names"][i];
-            wantedBannerEmbed.addFields({ value: name + ":white_check_mark:", inline: true })
+            wantedBannerEmbed.addFields({ name: '  ', value: name + " :white_check_mark:", inline: true })
         }
 
-        // sends the message into the channel defined in index 
-        await channel.send({ embeds: [wantedBannerEmbed] }); 
-        
+        await interaction.reply({embeds: [wantedBannerEmbed]});
     }
 }
 
