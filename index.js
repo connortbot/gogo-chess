@@ -65,7 +65,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 //SELECT MENUS
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isSelectMenu()) return;
+	if (!interaction.isStringSelectMenu()) return;
 	if (interaction.customId.startsWith('selectGear')) {
 		const gogoID = interaction.customId.split('-')[2];
 		const slot = interaction.customId.split('-')[1];
