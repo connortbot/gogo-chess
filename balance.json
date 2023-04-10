@@ -28,9 +28,8 @@
 
 
             "description": "Sumon is an angry, little alien whose home planet is completely unknown. His large, sharp teeth make for a formidable foe that few want to fight when he's angry."
-        }
-    },
-    "MostWantedGoGos": {
+        },
+
         "Lazarus": {
             "type": "AP",
             "ATK": 60,

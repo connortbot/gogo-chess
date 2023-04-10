@@ -3,9 +3,85 @@ const database = require("./database");
 const calculator = require("./calculator");
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, GuildForumThreadManager } = require('discord.js');
 const { Gear, Weapons, NormalGoGos, Monsters } = require('./balance.json');
 const { waitForDebugger } = require("node:inspector");
+
+
+function cmp_dicts(dict1, dict2) {
+    const keys1 = Object.keys(dict1);
+    const keys2 = Object.keys(dict2);
+  
+    // Check if both dictionaries have the same number of keys
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+  
+    // Iterate through the keys of the first dictionary
+    for (let key of keys1) {
+      // Check if the key exists in the second dictionary and if the values are equal
+      if (!keys2.includes(key) || dict1[key] !== dict2[key]) {
+        return false;
+      }
+    }
+  
+    // If all keys and values match, the dictionaries are equal
+    return true;
+  }
+
+
+/**
+ * Runs all the abilities. Returns message for embed.
+ * @param {Array} ability 
+ * @param {Array} full 
+ * @param {number} side 
+ * @param {*} stats 
+ */
+async function cast_ability(ability, full, side,stats) {
+    // REMINDER: ability -> [ Type, Main Scaling, Target Statistic, Targeting, Name ]
+    // Type: damage/heal/buff/revive
+    // Main Scaling: Integer
+    // Target Statistic: HP/CRIT....etc.
+    // Targeting: Nearest/Farthest
+    // Name: String
+    // see balance.json for update
+    let target = 0;
+    if (side == 0) {
+        target = 1;
+    } else {
+        target = 0;
+    }
+
+    const damage = stats["ATK"];
+    if (ability[0] === "damage") {
+        const fdmg = damage*ability[1];
+        let targeted_enemy = 0;
+        if (ability[3]=="Nearest") {
+            full[target][0]["HP"] = full[target][0]["HP"]-fdmg;
+        } else if (ability[3]=="Farthest") {
+            const last_index = full[target].length - 1;
+            targeted_enemy = last_index;
+            full[target][last_index]["HP"] = full[target][last_index]["HP"]-fdmg;
+        }
+        return ":crossed_swords:  "+stats["name"]+" used **"+ability[4]+"** on "+full[target][targeted_enemy]["name"]+" for "+fdmg.toString()+" damage!  :crossed_swords:"
+    } else if (ability[0] === "heal") {
+        let targeted_ally = 0;
+        if (full[side].length > 1) {
+            if (cmp_dicts(full[side][0],stats)) {
+                targeted_ally = 1;
+            } else {
+                targeted_ally = 0;
+            }
+        } else {
+            targeted_ally = 0;
+        }
+        const heal = (ability[1] * full[side][targeted_ally]["MAXHP"]);
+        const new_health = Math.min(full[side][targeted_ally]["MAXHP"],full[side][targeted_ally]["HP"]+heal);
+        full[side][targeted_ally]["HP"] = new_health;
+        return ":green_heart: "+stats["name"]+" healed "+full[target][targeted_ally]["name"]+" for "+heal.toString()+" health using **"+ability[4]+"**! :green_heart:";
+    }
+}
+
 
 /**
  * Runs through a battle loop between two given sides.
@@ -18,8 +94,8 @@ async function battle_loop(s1,s2,channel) {
         await channel.send("...one of the sides does not have a team! (Use **/team** to set up a team.)");
         return "noTeam";
     } else {
-        var side1 = []
-        var side2 = []
+        var side1 = [];
+        var side2 = [];
         for (let i=0; i<s1.length; i++) {
             var tGoGo = await database.getGoGo(s1[i]);
             const gogoStats = await calculator.calcGoGoStats(tGoGo);
@@ -28,6 +104,7 @@ async function battle_loop(s1,s2,channel) {
                 "type": NormalGoGos[tGoGo.id.split('#')[0]]["type"],
                 "ATK": gogoStats[0],
                 "HP": gogoStats[1],
+                "MAXHP": gogoStats[1],
                 "CRITRATE": gogoStats[2],
                 "CRITDMG": gogoStats[3],
                 "ABILITY": NormalGoGos[tGoGo.id.split('#')[0]]["ABILITY"],
@@ -44,6 +121,7 @@ async function battle_loop(s1,s2,channel) {
                     "type": NormalGoGos[tGoGo.id.split('#')[0]]["type"],
                     "ATK": gogoStats[0],
                     "HP": gogoStats[1],
+                    "MAXHP": gogoStats[1],
                     "CRITRATE": gogoStats[2],
                     "CRITDMG": gogoStats[3],
                     "ABILITY": NormalGoGos[tGoGo.id.split('#')[0]]["ABILITY"],
@@ -53,6 +131,7 @@ async function battle_loop(s1,s2,channel) {
             } else {
                 var monsterStats = Monsters[s2[i].split('/')[1]];
                 monsterStats["name"] = s2[i].split('/')[1];
+                monsterStats["MAXHP"] = monsterStats["HP"];
                 side2.push(monsterStats);
             }
         }
@@ -94,19 +173,13 @@ async function battle_loop(s1,s2,channel) {
                 var ability = thisGoGoStats["ABILITY"];
                 var cooldown = thisGoGoStats["COOLDOWN"];
                 if (turn % cooldown === 0) {
-                    if (ability[0] == "damage") {
-                        const fdmg = damage*ability[1];
-                        if (ability[3]=="Nearest") {
-                            side2[0]["HP"] = side2[0]["HP"]-fdmg;
-                        // Create embeded text for the ith iteration of the loop 
-                        const embeddedText = new EmbedBuilder() 
+                    let embedMsg = await cast_ability(ability,[side1,side2],0,thisGoGoStats);
+                    const embeddedText = new EmbedBuilder() 
                         .setColor(0xad11f5) // #ad11f5 purple 
-                        .setTitle(":crossed_swords:  "+thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!  :crossed_swords:")
+                        .setTitle(embedMsg);
 
-                        // sends the message into the channel defined in index 
-                        await channel.send({ embeds: [embeddedText] }); 
-                        }
-                    }
+                    // sends the message into the channel defined in index 
+                    await channel.send({ embeds: [embeddedText] }); 
                 }
                 if (side2[0]["HP"] <= 0) {
                     var killstrings = ["killed","slayed","annihilated","destroyed","defeated","murdered","decimated","obliterated"]
@@ -158,21 +231,13 @@ async function battle_loop(s1,s2,channel) {
                 var ability = thisGoGoStats["ABILITY"];
                 var cooldown = thisGoGoStats["COOLDOWN"];
                 if (turn % cooldown === 0) {
-                    if (ability[0] == "damage") {
-                        const fdmg = damage*ability[1];
-                        if (ability[3]=="Nearest") {
-                            side1[0]["HP"] = side1[0]["HP"]-fdmg;
-    
-                        // Create embeded text for the ith iteration of the loop 
-                        const embeddedText = new EmbedBuilder() 
+                    let embedMsg = await cast_ability(ability,[side1,side2],1,thisGoGoStats);
+                    const embeddedText = new EmbedBuilder() 
                         .setColor(0xad11f5) // #ad11f5 purple 
-                        .setTitle(":crossed_swords:  "+thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!  :crossed_swords:")
+                        .setTitle(embedMsg);
 
-                        // sends the message into the channel defined in index 
-                        await channel.send({ embeds: [embeddedText] }); 
-                        // await channel.send(thisGoGoStats["name"]+" used **"+ability[4]+"** on "+target["name"]+" for "+fdmg.toString()+" damage!"); - original non-embedded message
-                        }
-                    }
+                    // sends the message into the channel defined in index 
+                    await channel.send({ embeds: [embeddedText] }); 
                 }
                 if (side1[0]["HP"] <= 0) {
                     var killstrings = ["killed","slayed"]
