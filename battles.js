@@ -7,7 +7,12 @@ const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInte
 const { Gear, Weapons, NormalGoGos, Monsters } = require('./balance.json');
 const { waitForDebugger } = require("node:inspector");
 
-
+/**
+ * Returns boolean, true if the dictionaries are the same.
+ * @param {Object} dict1 
+ * @param {Object} dict2 
+ * @returns {boolean}
+ */
 function cmp_dicts(dict1, dict2) {
     const keys1 = Object.keys(dict1);
     const keys2 = Object.keys(dict2);
@@ -37,12 +42,12 @@ function cmp_dicts(dict1, dict2) {
  * @param {number} side 
  * @param {*} stats 
  */
-async function cast_ability(ability, full, side,stats) {
+async function cast_ability(ability, full, side,stats,dead) {
     // REMINDER: ability -> [ Type, Main Scaling, Target Statistic, Targeting, Name ]
     // Type: damage/heal/buff/revive
     // Main Scaling: Integer
     // Target Statistic: HP/CRIT....etc.
-    // Targeting: Nearest/Farthest
+    // Targeting: Nearest/Farthest (Buff: Backline/Frontline)
     // Name: String
     // see balance.json for update
     let target = 0;
@@ -79,9 +84,49 @@ async function cast_ability(ability, full, side,stats) {
         const new_health = Math.min(full[side][targeted_ally]["MAXHP"],full[side][targeted_ally]["HP"]+heal);
         full[side][targeted_ally]["HP"] = new_health;
         return ":green_heart: "+stats["name"]+" healed "+full[target][targeted_ally]["name"]+" for "+heal.toString()+" health using **"+ability[4]+"**! :green_heart:";
+    } else if (ability[0] == "buff") {
+        let targeted_ally = 0;
+        if (ability[3] == "Backline") {
+            targeted_ally = full[side].length - 1;
+        } else if (ability[3] == "Frontline") {
+            targeted_ally = 0;
+        }
+        const buff = (ability[1] * full[side][targeted_ally][ability[2]]);
+        const new_stat = full[side][targeted_ally][ability[2]] + buff;
+        full[side][targeted_ally][ability[2]] = new_stat;
+        return ":up: "+stats["name"]+" boosted "+full[target][targeted_ally]["name"]+"'s "+ability[2]+" by "+(ability[2]*100).toString()+"% using **"+ability[4]+"**! :up:";
+    } else if (ability[0] == "revive") {
+        let revived;
+        for (let i=0; i<dead[side].length; i++) {
+            if (dead[side][i] != null) {
+                revived = Object.assign({},dead[side][i]);
+                full[side].push(revived);
+                full[side][(full[side].length - 1)]["HP"] = full[side][(full[side].length - 1)]["MAXHP"] * ability[2];
+                dead[side][i] = null;
+                full[side].sort((a,b) => a["init_position"] - b["init_position"]);
+                break;
+            }
+        }
+        return ":revolving_hearts: "+stats["name"]+" revived "+revived["name"]+" to "+(ability[2]*100).toString()+"% HP using **"+ability[4]+"**! :revolving_hearts:";
     }
 }
 
+
+async function death_check(side,dead,channel) {
+    for (let i=0; i<side.length; i++) {
+        if (side[i]["HP"] <= 0) {
+            dead[side[i]["init_position"]] = side[i];
+            let dead_ix = side[i]["init_position"];
+            side.splice(i,1);
+            const killstrings = ["killed","slayed","annihilated","destroyed","defeated","murdered","decimated","obliterated"];
+            let kill_str = killstrings[Math.floor((Math.random()*killstrings.length))];
+            const embeddedText = new EmbedBuilder() 
+                .setColor(0x880808) // #880808 - bloody red
+                .setTitle(dead[dead_ix]["name"]+" was "+kill_str+"!")
+            await channel.send({ embeds: [embeddedText] }); 
+        }
+    }
+}
 
 /**
  * Runs through a battle loop between two given sides.
@@ -109,8 +154,10 @@ async function battle_loop(s1,s2,channel) {
                 "CRITDMG": gogoStats[3],
                 "ABILITY": NormalGoGos[tGoGo.id.split('#')[0]]["ABILITY"],
                 "COOLDOWN": NormalGoGos[tGoGo.id.split('#')[0]]["COOLDOWN"],
+                "init_position": i
             }
             side1.push(gogoDict);
+            side1_dead.push(null);
         }
         for (let i=0; i<s2.length; i++) {
             if (!s2[i].startsWith('Monster/')) {
@@ -126,16 +173,21 @@ async function battle_loop(s1,s2,channel) {
                     "CRITDMG": gogoStats[3],
                     "ABILITY": NormalGoGos[tGoGo.id.split('#')[0]]["ABILITY"],
                     "COOLDOWN": NormalGoGos[tGoGo.id.split('#')[0]]["COOLDOWN"],
+                    "init_position": i,
                 }
                 side2.push(gogoDict);
             } else {
                 var monsterStats = Monsters[s2[i].split('/')[1]];
                 monsterStats["name"] = s2[i].split('/')[1];
                 monsterStats["MAXHP"] = monsterStats["HP"];
+                monsterStats["init_position"] = i;
                 side2.push(monsterStats);
             }
+            side2_dead.push(null);
         }
         var turn = 1
+        let side1_dead = [];
+        let side2_dead = [];
         while (side1.length>0 && side2.length>0) {
             // SIDE 1
             for (let i=0; i<side1.length; i++) {
@@ -173,7 +225,7 @@ async function battle_loop(s1,s2,channel) {
                 var ability = thisGoGoStats["ABILITY"];
                 var cooldown = thisGoGoStats["COOLDOWN"];
                 if (turn % cooldown === 0) {
-                    let embedMsg = await cast_ability(ability,[side1,side2],0,thisGoGoStats);
+                    let embedMsg = await cast_ability(ability,[side1,side2],0,thisGoGoStats,[side1_dead,side2_dead]);
                     const embeddedText = new EmbedBuilder() 
                         .setColor(0xad11f5) // #ad11f5 purple 
                         .setTitle(embedMsg);
@@ -181,20 +233,7 @@ async function battle_loop(s1,s2,channel) {
                     // sends the message into the channel defined in index 
                     await channel.send({ embeds: [embeddedText] }); 
                 }
-                if (side2[0]["HP"] <= 0) {
-                    var killstrings = ["killed","slayed","annihilated","destroyed","defeated","murdered","decimated","obliterated"]
-                    var kill_str = killstrings[Math.floor((Math.random()*killstrings.length))];
-                    // Create embeded text for the ith iteration of the loop 
-                const embeddedText = new EmbedBuilder() 
-                .setColor(0x880808) // #880808 - bloody red
-                .setTitle(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!")
-
-                // sends the message into the channel defined in index 
-                await channel.send({ embeds: [embeddedText] }); 
-                // await channel.send(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!"); - original non-embedded message 
-
-                    side2.shift();
-                }
+                await death_check(side2,side2_dead,channel);
                 await new Promise(r => setTimeout(r, 100))
             }
             // SIDE 2
@@ -226,12 +265,11 @@ async function battle_loop(s1,s2,channel) {
                 // await channel.send(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]); - original non-embedded message 
                 }
                 side1[0]["HP"] = side1[0]["HP"]-damage;
-    
                 // Use ability
                 var ability = thisGoGoStats["ABILITY"];
                 var cooldown = thisGoGoStats["COOLDOWN"];
                 if (turn % cooldown === 0) {
-                    let embedMsg = await cast_ability(ability,[side1,side2],1,thisGoGoStats);
+                    let embedMsg = await cast_ability(ability,[side1,side2],1,thisGoGoStats,[side1_dead,side2_dead]);
                     const embeddedText = new EmbedBuilder() 
                         .setColor(0xad11f5) // #ad11f5 purple 
                         .setTitle(embedMsg);
@@ -239,19 +277,7 @@ async function battle_loop(s1,s2,channel) {
                     // sends the message into the channel defined in index 
                     await channel.send({ embeds: [embeddedText] }); 
                 }
-                if (side1[0]["HP"] <= 0) {
-                    var killstrings = ["killed","slayed"]
-                    var kill_str = killstrings[Math.floor((Math.random()*killstrings.length))];
-                    // Create embeded text for the ith iteration of the loop 
-                const embeddedText = new EmbedBuilder() 
-                .setColor(0x880808) // #880808 - bloody red
-                .setTitle(":drop_of_blood:  "+thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!  :drop_of_blood:")
-
-                // sends the message into the channel defined in index 
-                await channel.send({ embeds: [embeddedText] }); 
-                // await channel.send(thisGoGoStats["name"]+" "+kill_str+" "+target["name"]+"!"); - original non-embedded message 
-                    side1.shift();
-                }
+                await death_check(side2,side2_dead,channel);
                 await new Promise(r => setTimeout(r, 100))
             }
     
