@@ -1,6 +1,8 @@
 {
     "_comment": "Simple abilities are created with Arrays, in this format: [ damage/heal/buff/revive, main scaling, targetstat(buff), targeting,name]",
     "_comment2": "RANGE is set to Nearest/Farthest/Random",
+    "BannerTitle": "Dan Devious Dubious Demon Dungeon",
+    "Subtitle": "GoGo Roll Event",
     "SellValues": {
         "Gear": {
             "1": 50,
@@ -39,8 +41,7 @@
             "rarity": "Normal",
             "COOLDOWN": 3,
 
-
-            "description": "Lackey is a laid back alien from a planet known for bountiful tomfoolery. Equipped with alcohol, Lackey is ready to take on any opponent at a moments notice. After a couple drinks, that is."
+            "description": "Lackey is a laid back alien from a planet known for bountiful tomfoolery. Equipped with alcohol, Lackey is ready to take on any opponent at a moments notice, after a couple drinks that is."
         },
         "Ufus":{
             "type": "AD",
@@ -66,7 +67,6 @@
             "COOLDOWN": 10
         }
     },
-
     "Monsters": {
         "Spider": {
             "type": "AD",
@@ -162,6 +162,19 @@
             "loot": "UfusKomono",
             "recommended_lvl": 5,
             "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
+        }
+    },
+
+    "Banners": {
+        "Wanted": {
+            "names": ["bob","bobby","bobble"],
+            "description": "",
+            "image": "https://i.insider.com/602ee9ced3ad27001837f2ac?width=700"
+        },
+        "Most Wanted": {
+            "names": ["","",""],
+            "description": "",
+            "image": "https://i.insider.com/602ee9ced3ad27001837f2ac?width=700"
         }
     }
 }
