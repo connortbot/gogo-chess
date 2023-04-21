@@ -17,15 +17,15 @@ module.exports = {
         var buttons = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('showGoGos')
+                    .setCustomId('showGoGos-' + interaction.user.id.toString())
                     .setLabel('GoGos')
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
-                    .setCustomId('showWeapons')
+                    .setCustomId('showWeapons' + interaction.user.id.toString())
                     .setLabel('Weapons')
                     .setStyle(ButtonStyle.Success),
                 new ButtonBuilder()
-                    .setCustomId('showGear')
+                    .setCustomId('showGear' + interaction.user.id.toString())
                     .setLabel('Gear')
                     .setStyle(ButtonStyle.Danger)
             )
@@ -36,7 +36,7 @@ module.exports = {
                     .setLabel('Previous')
                     .setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder()
-                    .setCustomId('nextpage')
+                    .setCustomId('nextPage')
                     .setLabel('Next')
                     .setStyle(ButtonStyle.Secondary),
             )

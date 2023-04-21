@@ -41,10 +41,9 @@ module.exports = {
             }
             console.log(names_and_aliases);
             if (!names_and_aliases.includes(interaction.options.getString('gear'))) {
-                await interaction.editReply('There is no existing gear called by '+interaction.options.getString('gear')+'.');
+                await interaction.editReply('There is no existing gear called '+interaction.options.getString('gear')+'.');
             }
         }
-        
         const user = await database.getUser(interaction.user.id.toString());
         const gogos = user.inventory.split('-');
         var gear = user.gear.split('-');
@@ -55,7 +54,8 @@ module.exports = {
                 break;
             }
         }
-        const menu = new SelectMenuBuilder().setCustomId('selectGear'+'-'+interaction.options.getInteger('slot').toString()+'-'+gogoID).setPlaceholder('Nothing selected');
+        const MenuID = 'selectGear-' + interaction.user.id.toString() + '-' + interaction.options.getInteger('slot').toString() + '-' + gogoID;
+        const menu = new SelectMenuBuilder().setCustomId(MenuID).setPlaceholder('Nothing selected');
         for (let i=0; i<gear.length; i++) {
             if (!gear[i].startsWith('Weapon')) {
                 if (Gear[gear[i].split('#')[0]]["name"] == interaction.options.getString('gear') || Gear[gear[i].split('#')[0]]["alias"] == interaction.options.getString('gear')) {
@@ -68,15 +68,11 @@ module.exports = {
                 }
             }
         }
-        const dropdown = new ActionRowBuilder()
-            .addComponents(
-                menu
-            )
-        console.log(dropdown);
+        const dropdown = new ActionRowBuilder().addComponents(menu);
         if (menu.options.length == 0) {
             await interaction.editReply('You have none of this type of gear!');
         } else {
-            const reply = await interaction.editReply({content: 'Select one of your Gears:', components: [dropdown]});
+            await interaction.editReply({content: 'Select one of your Gears:', components: [dropdown]});
         }
 	},
 };
