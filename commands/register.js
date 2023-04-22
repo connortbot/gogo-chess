@@ -18,7 +18,7 @@ module.exports = {
 // generateEmbed: interaction
 function generateEmbed(interaction) {
     const title = "Hi "+interaction.user.username + ", welcome to GoGo World!";
-    const description = "You've been gifted a **Sumon** to start your journey. Good luck!";
+    const description = "You've been gifted a **Sumon** and **5 rolls** to start your journey. Good luck!";
     const regular_field = { name: 'To get started:', value: 'Use the command **/help**' };
     const embed = new EmbedBuilder()
         .setTitle(title)

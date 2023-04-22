@@ -171,7 +171,7 @@ async function createNewUser(userID) {
         pity: 0,
         mwpity: 0,
         bones: 0,
-        rolls: 0,
+        rolls: 5,
         mwrolls: 0,
         fight_limits: "0-0-0-0000_01_01",
         team: ""

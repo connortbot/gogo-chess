@@ -14,7 +14,7 @@ const { removeGoGo } = require("../database");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sell')
-        .setDescription('Sell your pathethic gogos away for some bones!')
+        .setDescription('Sell your pathetic gogos away for some bones!')
         .addStringOption((option) =>
             option
                 .setName('name')
