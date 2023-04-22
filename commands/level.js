@@ -66,7 +66,6 @@ module.exports = {
             i = await database.getGear(master[ix-1]);
             rarity = Gear[master[ix-1].split('#')[0].split('/')[1]]["rarity"];
         } else {
-            console.log(master);
             i = await database.getWeapon(master[ix-1]);
             rarity = Weapons[master[ix-1].split('#')[0].split('/')[1]]["rarity"];
         }
