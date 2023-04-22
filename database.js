@@ -406,13 +406,13 @@ async function initialize() {
    */
    //let ufus = await createNewGoGo('Ufus');
    //let lackey = await createNewGoGo('Lackey');
-   var user = await User.findOne({where: {id: "450385597631299594"}});
-   user.fight_limits = "0-0-0-0000_01_01";
+   //var user = await User.findOne({where: {id: "450385597631299594"}});
+   //user.fight_limits = "0-0-0-0000_01_01";
    //user.inventory = "Sumon#0-"+ufus+"-"+lackey;
    //user.gear = "Weapon/IronSword#2021";
    //user.bones = 100000000;
    //user.rolls = 5000;
-   await user.save();
+   //await user.save();
 }
 
 
