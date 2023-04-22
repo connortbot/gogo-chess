@@ -94,20 +94,26 @@ async function cast_ability(ability, full, side,stats,dead) {
         const buff = (ability[1] * full[side][targeted_ally][ability[2]]);
         const new_stat = full[side][targeted_ally][ability[2]] + buff;
         full[side][targeted_ally][ability[2]] = new_stat;
-        return ":up: "+stats["name"]+" boosted "+full[target][targeted_ally]["name"]+"'s "+ability[2]+" by "+(ability[2]*100).toString()+"% using **"+ability[4]+"**! :up:";
+        return ":up: "+stats["name"]+" boosted "+full[side][targeted_ally]["name"]+"'s "+ability[2]+" by "+(ability[1]*100).toString()+"% using **"+ability[4]+"**! :up:";
     } else if (ability[0] == "revive") {
         let revived;
+        let revive = false;
         for (let i=0; i<dead[side].length; i++) {
             if (dead[side][i] != null) {
-                revived = Object.assign({},dead[side][i]);
+                revived = {...dead[side][i]};
                 full[side].push(revived);
                 full[side][(full[side].length - 1)]["HP"] = full[side][(full[side].length - 1)]["MAXHP"] * ability[2];
                 dead[side][i] = null;
                 full[side].sort((a,b) => a["init_position"] - b["init_position"]);
+                revive = true;
                 break;
             }
         }
-        return ":revolving_hearts: "+stats["name"]+" revived "+revived["name"]+" to "+(ability[2]*100).toString()+"% HP using **"+ability[4]+"**! :revolving_hearts:";
+        if (revive) {
+            return ":revolving_hearts: "+stats["name"]+" revived "+revived["name"]+" to "+(ability[1]*100).toString()+"% HP using **"+ability[4]+"**! :revolving_hearts:";
+        } else {
+            return stats["name"]+" found no ally to revive!";
+        }
     }
 }
 
@@ -268,7 +274,7 @@ async function battle_loop(s1,s2,channel) {
 
                     await channel.send({ embeds: [embeddedText] }); 
                 }
-                let side1_defeated = await death_check(side2,side2_dead,channel);
+                let side1_defeated = await death_check(side1,side1_dead,channel);
                 if (side1_defeated) {return "side2";}
                 await new Promise(r => setTimeout(r, 100))
             }

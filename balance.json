@@ -21,7 +21,7 @@
         "Sumon": {
             "type": "AD",
             "ATK": 5,
-            "HP": 100,
+            "HP": 50,
             "CRITRATE": 0.1,
             "CRITDMG": 0.5,
             "ABILITY": ["damage",5.0,"","Nearest","BITE"],
@@ -34,25 +34,24 @@
         "Lackey": {
             "type": "AD",
             "ATK": 3,
-            "HP": 110,
+            "HP": 60,
             "CRITRATE": 0.1,
             "CRITDMG": 0.3,
             "ABILITY": ["heal",5,"","Nearest","BOOZE"],
             "rarity": "Normal",
             "COOLDOWN": 3,
 
-            "description": "Lackey is a laid back alien from a planet known for bountiful tomfoolery. Equipped with alcohol, Lackey is ready to take on any opponent at a moments notice, after a couple drinks that is."
+            "description": "Lackey is a laid back alien from a planet known for bountiful tomfoolery. Equipped with alcohol, Lackey is ready to take on any opponent at a moments notice. After a couple drinks that is."
         },
         "Ufus":{
             "type": "AD",
             "ATK": 3,
-            "HP": 150,
+            "HP": 100,
             "CRITRATE": 0.05,
             "CRITDMG": 0.7,
             "ABILITY": ["damage",3.0,"","Nearest","HOOK"],
             "rarity": "Normal",
             "COOLDOWN": 5,
-
 
             "description": "Ufus is a giant masked creature with a pair of red boxing gloves. His large torso absorbs a great deal of damage making him a difficult rival to knockout."
         },
@@ -96,6 +95,27 @@
             "COOLDOWN": 8
         },
         
+
+        "Skeleton": {
+            "type": "AD",
+            "HP": 25,
+            "ATK": 5,
+            "CRITRATE": 0.025,
+            "CRITDMG": 0.20,
+            "ABILITY": ["damage",4.0,"","Nearest","SLASH"],
+            "COOLDOWN": 3
+        },
+        "Skeletal Lion": {
+            "type": "AD",
+            "HP": 150,
+            "ATK": 20,
+            "CRITRATE": 0.025,
+            "CRITDMG": 0.20,
+            "ABILITY": ["damage",2.0,"","Nearest","CHOMP"],
+            "COOLDOWN": 3
+        },
+
+
         "Dragon K'aeda": {
             "type": "AP",
             "HP": 1000,
@@ -130,6 +150,23 @@
             "name": "None",
             "alias": "IOEJAFDKNSIEFSDLIHKUDJLIHSUDJLAHKEIUDLUF"
         },
+        "PoisonVial": {
+            "name": "Poison Vial",
+            "rarity": 3,
+            "HP": 0,
+            "ATK": 6,
+            "CRITRATE": 0.02,
+            "CRITDMG": 0.05
+        },
+        "BoneSword": {
+            "name": "Bone Sword",
+            "rarity": 3,
+            "HP": 0.05,
+            "ATK": 2,
+            "CRITRATE": 0.05,
+            "CRITDMG": 0.02,
+            "alias": "BONS"
+        },
         "UfusKomono": {
             "name": "Ufus' Komono",
             "rarity": 3,
@@ -141,6 +178,10 @@
         },
 
         
+
+
+
+
         "AdamCross": {
             "name": "Adams Cross",
             "rarity": 5,
@@ -159,9 +200,15 @@
     "Dungeons": {
         "Spider's Lair": {
             "name": "Spider's Lair",
-            "loot": "UfusKomono",
-            "recommended_lvl": 5,
+            "loot": "PoisonVial",
+            "recommended_lvl": 1,
             "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
+        },
+        "Northern Crypt": {
+            "name": "Northern Crypt",
+            "loot": "BoneSword",
+            "recommended_lvl": 1,
+            "waves": [["Monster/Skeleton","Monster/Skeleton","Monster/Skeleton"],["Monster/Skeletal Lion"]]
         }
     },
 
