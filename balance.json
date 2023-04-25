@@ -17,6 +17,7 @@
             "5": 1000000
         }
     },
+
     "NormalGoGos": {
         "Sumon": {
             "type": "AD",
@@ -150,8 +151,8 @@
             "name": "None",
             "alias": "IOEJAFDKNSIEFSDLIHKUDJLIHSUDJLAHKEIUDLUF"
         },
-        "PoisonVial": {
-            "name": "Poison Vial",
+        "VenomVial": {
+            "name": "Venom Vial",
             "rarity": 3,
             "HP": 0,
             "ATK": 6,
@@ -200,13 +201,15 @@
     "Dungeons": {
         "Spider's Lair": {
             "name": "Spider's Lair",
-            "loot": "PoisonVial",
+            "loot": "VenomVial",
+            "bones": 10,
             "recommended_lvl": 1,
             "waves": [["Monster/Spider","Monster/Spider","Monster/Spider"],["Monster/Spider","Monster/Spider","Monster/Big Spider"],["Monster/Spider Queen"]]
         },
         "Northern Crypt": {
             "name": "Northern Crypt",
             "loot": "BoneSword",
+            "bones": 10,
             "recommended_lvl": 1,
             "waves": [["Monster/Skeleton","Monster/Skeleton","Monster/Skeleton"],["Monster/Skeletal Lion"]]
         }

@@ -68,9 +68,10 @@ module.exports = {
             }
             // Defeated the Dungeon
             await updateLimits([user]);
-            await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' upon clearing this dungeon.');
+            await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' and '+Dungeons[dungeonName]["bones"].toString()+' bones upon clearing this dungeon.');
             const gearID = await database.createNewGear(Dungeons[dungeonName]["loot"]);
             await database.giveGearWeapon(interaction.user.id.toString(),gearID);
+            await database.giveBones(interaction.user.id.toString(),Dungeons[dungeonName]["bones"]);
             await interaction.editReply(interaction.user.username+' cleared the '+dungeonName+'.');
         } else {
             const coopUser = await database.getUser(coop.user.id.toString());
@@ -110,9 +111,10 @@ module.exports = {
                         }
                         // Defeated the Dungeon
                         await updateLimits([user,coopUser]);
-                        await interaction.channel.send('You were awarded the '+Gear[Dungeon[dungeonName]["loot"]]["name"]+' upon clearing this dungeon.');
+                        await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' and '+Dungeons[dungeonName]["bones"].toString()+' bones upon clearing this dungeon.');
                         const gearID = database.createNewGear(Dungeon[dungeonName]["loot"]);
                         await database.giveGearWeapon(interaction.user.id.toString(),gearID);
+                        await database.giveBones(interaction.user.id.toString(),Dungeons[dungeonName]["bones"]);
                         await interaction.editReply(interaction.user.username+' cleared the '+dungeonName+'.');
                     } else {
                         interaction.editReply('<@'+coop.id.toString()+"> doesn't want to fight. Until next time!");

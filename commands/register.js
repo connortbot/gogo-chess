@@ -9,8 +9,12 @@ module.exports = {
         .setDescription('Join us in GoGo World!'),
     async execute(interaction) {
         const embed = generateEmbed(interaction);
-        database.createNewUser(interaction.user.id.toString());
-        await interaction.reply({embeds: [embed]});
+        const usr = database.getUser(interaction.user.id.toString());
+        if (usr == null) {
+            await database.createNewUser(interaction.user.id.toString());
+            await interaction.reply({embeds: [embed]});
+        }
+        await interaction.reply("You have already registered!");
     }
 }
 
