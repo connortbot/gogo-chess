@@ -359,6 +359,12 @@ async function giveBones(usrID,bonesAMT) {
     await user.save();
 }
 
+async function giveRolls(usrID,rollsAMT) {
+    const user = await User.findOne({where: {id: usrID}});
+    user.rolls = user.rolls + rollsAMT;
+    await user.save();
+}
+
 /**
  * async initialize()
  * Initializes a Sequelize connection to Digital Ocean database (or local).
@@ -446,5 +452,6 @@ sequelize.authenticate().then(() => {
     TrainNewGoGo,
     burnGear,
     burnWeapon,
-    giveBones
+    giveBones,
+    giveRolls
  }

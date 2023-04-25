@@ -14,7 +14,7 @@ module.exports = {
             .setTitle("Available Dungeons to Conquer...")
         for (i=0; i<Object.keys(Dungeons).length; i++) {
             const indexKey = Object.keys(Dungeons)[i];
-            const description = "*Lvl: "+Dungeons[indexKey]["recommended_lvl"]+", Reward: "+Gear[Dungeons[indexKey]["loot"]]["name"]+", Waves: "+Object.keys(Dungeons[indexKey]["waves"]).length.toString()+"*";
+            const description = "*Lvl: "+Dungeons[indexKey]["recommended_lvl"]+", Reward: "+Gear[Dungeons[indexKey]["loot"]]["name"]+" and "+Dungeons[indexKey]["bones"].toString()+" bones"+", Waves: "+Object.keys(Dungeons[indexKey]["waves"]).length.toString()+"*";
             embed.addFields(
 				{ name: "`"+(i+1).toString()+".` "+Object.keys(Dungeons)[i], value: description});
         }

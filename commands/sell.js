@@ -14,7 +14,7 @@ const { removeGoGo } = require("../database");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sell')
-        .setDescription('Sell your pathetic gogos away for some bones!')
+        .setDescription('Sell your pathetic gogos away for some rolls!')
         .addStringOption((option) =>
             option
                 .setName('name')
@@ -29,7 +29,7 @@ module.exports = {
         // get inventory from after getting user 
         // user.inventory gets the string of gogos (ids) in the inventory and split('-') splits the string by the dashes into an array of the gogos 
         const posGoGo = user.inventory.split('-'); 
-        const sellValue = 20;
+        const sellValue = 5;
         
         // iterate through the list of inventory (that is now an array to) to check for the name of the gogo inputted
         for (let i=0; i<posGoGo.length; i++) {
@@ -41,7 +41,7 @@ module.exports = {
             if (name === gogoName) {
                 // do all the stuff here
                 await db.removeGoGo(interaction.user.id.toString(),posGoGo[i]); // call the removeGoGo function (since nothing is returned, cant even store it in a const or var)
-                await user.update({bones: user.bones+sellValue});
+                await user.update({rolls: user.rolls+sellValue});
                 await interaction.reply("You've successfully received **"+sellValue.toString()+"** for selling " + gogoName); //this will be the final output (reply) back to user once all the computation has be done 
             }
         }
