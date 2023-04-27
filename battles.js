@@ -309,14 +309,14 @@ module.exports = {
         for (let i=0; i<players.length; i++) {
             let p = players[i];
             const limits = p.fight_limits.split('-');
-            p.fight_limits = `${limits[0]}-${limits[1]}-1-${limits[3]}`;
+            p.fight_limits = `${limits[0]}-${limits[1]}-1-${limits[3]}-${limits[4]}`;
             await p.save();
         }
         var b = await battle_loop(s1,s2,channel);
         for (let i=0; i<players.length; i++) {
             let p = players[i];
             const limits = p.fight_limits.split('-');
-            p.fight_limits = `${limits[0]}-${limits[1]}-0-${limits[3]}`;
+            p.fight_limits = `${limits[0]}-${limits[1]}-0-${limits[3]}-${limits[4]}`;
             await p.save();
         }
         return b;

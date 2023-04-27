@@ -53,6 +53,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		return;
 	}
     try {
+		await database.checkTraining(interaction.user.id.toString(),interaction.channel);
         await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
@@ -220,18 +221,3 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Login
 client.login(token);
-
-//// DAILY REFRESHES ///
-//con minute hour
-schedule.scheduleJob('0 0 * * *', async () => {
-	const users = await database.getUsers();
-	for (let i = 0; i<users.length; i++) {
-		let user = users[i];
-		const gogo = await database.getGoGo(user.training);
-		const leveled = await database.levelGoGo(user.training);
-		if (leveled) {
-			const channel = client.channels.cache.get(dojo);
-			channel.send("<@"+user.id+">'s **"+gogo.id.split('#')[0]+"** has leveled up!");
-		}
-	}
-});

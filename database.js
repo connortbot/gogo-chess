@@ -50,7 +50,7 @@ const User = sequelize.define('User', {
         type: Sequelize.INTEGER
     },
     fight_limits: {
-        type: Sequelize.STRING // [ defeated_boss (1/0) - # dungeon runs (0-10) - currently_active (1/0) - last_date_dungeon]
+        type: Sequelize.STRING // [ defeated_boss (1/0) - # dungeon runs (0-10) - currently_active (1/0) - last_date_dungeon - last_date_levelup ]
     },
     team: {
         type: Sequelize.STRING
@@ -173,7 +173,7 @@ async function createNewUser(userID) {
         bones: 0,
         rolls: 5,
         mwrolls: 0,
-        fight_limits: "0-0-0-0000_01_01",
+        fight_limits: "0-0-0-0000_01_01-0000_01_01",
         team: ""
     });
 }
@@ -365,6 +365,26 @@ async function giveRolls(usrID,rollsAMT) {
     await user.save();
 }
 
+async function checkTraining(usrID,channel) {
+    const user = await User.findOne({where: {id: usrID}});
+    if (user) {
+        const date = new Date();
+        const curr_date = `${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()}`;
+        let limits = user.fight_limits.split('-');
+        if (limits[4] !== curr_date) { // Its been over a day since the last levelup
+            if (user.training !== "") {
+                let gogo = await getGoGo(usr.training);
+                let leveled = await levelGoGo(user.training);
+                if (leveled) {
+                    await channel.send("<@"+user.id+">'s **"+gogo.id.split('#')[0]+"** has leveled up!");
+                    user.fight_limits = `${limits[0]}-${limits[1]}-${limits[2]}-${limits[3]}-${curr_date}`;
+                    await user.save();
+                }
+            }
+        }
+    }
+}
+
 /**
  * async initialize()
  * Initializes a Sequelize connection to Digital Ocean database (or local).
@@ -413,7 +433,7 @@ async function initialize() {
    //let ufus = await createNewGoGo('Ufus');
    //let lackey = await createNewGoGo('Lackey');
    //var user = await User.findOne({where: {id: "450385597631299594"}});
-   //user.fight_limits = "0-0-0-0000_01_01";
+   //user.fight_limits = "0-0-0-0000_01_01-0000_01_01";
    //user.inventory = "Sumon#0-"+ufus+"-"+lackey;
    //user.gear = "Weapon/IronSword#2021";
    //user.bones = 100000000;
@@ -453,5 +473,6 @@ sequelize.authenticate().then(() => {
     burnGear,
     burnWeapon,
     giveBones,
-    giveRolls
+    giveRolls,
+    checkTraining
  }

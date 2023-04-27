@@ -9,11 +9,11 @@ async function updateLimits(users) {
     const curr_date = `${date.getFullYear()}_${date.getMonth() + 1}_${date.getDate()}`;
     for (let i=0; i<users.length; i++) {
         let user = users[i];
-        let limits = user.fight_limits.split('-')
+        let limits = user.fight_limits.split('-');
         if (limits[3] !== curr_date) {
-            user.fight_limits = `${limits[0]}-1-${limits[2]}-${curr_date}`;
+            user.fight_limits = `${limits[0]}-1-${limits[2]}-${curr_date}-${limits[4]}`;
         } else {
-            user.fight_limits = `${limits[0]}-${limits[1]+1}-${limits[2]}-${curr_date}`;
+            user.fight_limits = `${limits[0]}-${limits[1]+1}-${limits[2]}-${curr_date}-${limits[4]}`;
         }
         await user.save();
     }
