@@ -1,7 +1,7 @@
 // REQUIRED MODULES: NODE: SEQUELIZE, DISCORD.JS
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, IntentsBitField } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, IntentsBitField } = require('discord.js');
 const { token, dojo } = require('./config.json');
 const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
@@ -68,6 +68,12 @@ client.on(Events.InteractionCreate, async interaction => {
 	if (interaction.customId.split('-')[1] != interaction.user.id.toString()) return;
 	if (interaction.customId.startsWith('selectGear')) {
 		await equipGear_SELECTMENU(interaction);
+	} else if (interaction.customId.startsWith('selectTraining')) {
+		const gogo = interaction.values[0];
+		if (interaction.customId.split('-')[1] === interaction.user.id.toString()) {
+			await database.TrainNewGoGo(interaction.user.id.toString(),gogo);
+			await interaction.reply("Placed GoGo in training");
+		}
 	}
 });
 

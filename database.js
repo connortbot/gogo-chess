@@ -373,7 +373,7 @@ async function checkTraining(usrID,channel) {
         let limits = user.fight_limits.split('-');
         if (limits[4] !== curr_date) { // Its been over a day since the last levelup
             if (user.training !== "") {
-                let gogo = await getGoGo(usr.training);
+                let gogo = await getGoGo(user.training);
                 let leveled = await levelGoGo(user.training);
                 if (leveled) {
                     await channel.send("<@"+user.id+">'s **"+gogo.id.split('#')[0]+"** has leveled up!");

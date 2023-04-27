@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const database = require('../database');
-const { ActionRowBuilder, SelectMenuBuilder, Embed } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, Embed } = require('discord.js');
 const { NormalGoGos, Weapons, Gear } = require('../balance.json');
 
 // KNOWN BUGS:
@@ -55,7 +55,7 @@ module.exports = {
             }
         }
         const MenuID = 'selectGear-' + interaction.user.id.toString() + '-' + interaction.options.getInteger('slot').toString() + '-' + gogoID;
-        const menu = new SelectMenuBuilder().setCustomId(MenuID).setPlaceholder('Nothing selected');
+        const menu = new StringStringSelectMenuBuilder().setCustomId(MenuID).setPlaceholder('Nothing selected');
         for (let i=0; i<gear.length; i++) {
             if (!gear[i].startsWith('Weapon')) {
                 if (Gear[gear[i].split('#')[0]]["name"] == interaction.options.getString('gear') || Gear[gear[i].split('#')[0]]["alias"] == interaction.options.getString('gear')) {

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, UserFlags } = require('discord.js');
 const database = require('../database');
-const { Collection, Events, ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder } = require('discord.js');
+const { Collection, Events, ActionRowBuilder, StringSelectMenuBuilder, Embed, EmbedBuilder } = require('discord.js');
 const { NormalGoGos, Weapons, Gear, Dungeons } = require('../balance.json');
 const battles = require('../battles');
 

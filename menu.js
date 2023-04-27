@@ -3,7 +3,7 @@ const { NormalGoGos, Weapons, Gear } = require('./balance.json');
 const calculator = require('./calculator');
 const battles = require('./battles');
 const database = require('./database');
-const { ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 /**
  * Responds to user selection of gear and equips a GoGo with a piece of gear

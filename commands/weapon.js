@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const database = require('../database');
 const calculator = require("../calculator");
-const { ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, Embed, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { NormalGoGos, Weapons, Gear } = require('../balance.json');
 
 module.exports = {

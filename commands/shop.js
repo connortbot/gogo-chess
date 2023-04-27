@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const database = require('../database');
-const { ActionRowBuilder, SelectMenuBuilder, Embed, EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, Embed, EmbedBuilder } = require('discord.js');
 
 const shop = [
     {name: "`1.` 1 roll", value: ":bone: **1000 bones** :bone:"},

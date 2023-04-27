@@ -9,7 +9,7 @@ module.exports = {
         .setDescription('Join us in GoGo World!'),
     async execute(interaction) {
         const embed = generateEmbed(interaction);
-        const usr = database.getUser(interaction.user.id.toString());
+        const usr = await database.getUser(interaction.user.id.toString());
         if (usr == null) {
             await database.createNewUser(interaction.user.id.toString());
             await interaction.reply({embeds: [embed]});

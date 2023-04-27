@@ -3,7 +3,7 @@ const database = require("./database");
 const calculator = require("./calculator");
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, SelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, GuildForumThreadManager } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, GuildForumThreadManager } = require('discord.js');
 const { Gear, Weapons, NormalGoGos, Monsters } = require('./balance.json');
 const { waitForDebugger } = require("node:inspector");
 

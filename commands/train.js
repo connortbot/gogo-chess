@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, SelectMenuBuilder } = require('discord.js');
+const { SlashCommandBuilder, StringSelectMenuBuilder } = require('discord.js');
 const { ActionRowBuilder, EmbedBuilder, Embed } = require('discord.js');
 const database = require('../database')
 
@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
         const user = await database.getUser(interaction.user.id.toString());
         var gogos = user.inventory.split('-');
-        const menu = new SelectMenuBuilder().setCustomId('select').setPlaceholder('Nothing selected');
+        const menu = new StringSelectMenuBuilder().setCustomId('selectTraining-'+interaction.user.id.toString()).setPlaceholder('Nothing selected');
         for (let i=0; i<gogos.length; i++) {
             menu.addOptions({
                 label: gogos[i].split('#')[0],
