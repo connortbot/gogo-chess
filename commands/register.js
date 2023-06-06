@@ -13,8 +13,9 @@ module.exports = {
         if (usr == null) {
             await database.createNewUser(interaction.user.id.toString());
             await interaction.reply({embeds: [embed]});
+        } else {
+            await interaction.reply("You have already registered!");
         }
-        await interaction.reply("You have already registered!");
     }
 }
 

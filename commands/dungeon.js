@@ -60,6 +60,7 @@ module.exports = {
                     // Failed the Fight
                     await updateLimits([user]);
                     await interaction.editReply('You failed the fight');
+                    return;
                 }
                 if (b == "noTeam") {
                     await interaction.editReply('You did not select a team. (Use **/team** to set one up)')
@@ -106,13 +107,14 @@ module.exports = {
                             if (b != "side1") {
                                 // Failed the Fight
                                 await updateLimits([user,coopUser]);
-                                interaction.editReply('You failed the fight');
+                                await interaction.editReply('You failed the fight');
+                                return;
                             }
                         }
                         // Defeated the Dungeon
                         await updateLimits([user,coopUser]);
                         await interaction.channel.send('You were awarded the '+Gear[Dungeons[dungeonName]["loot"]]["name"]+' and '+Dungeons[dungeonName]["bones"].toString()+' bones upon clearing this dungeon.');
-                        const gearID = database.createNewGear(Dungeon[dungeonName]["loot"]);
+                        const gearID = await database.createNewGear(Dungeon[dungeonName]["loot"]);
                         await database.giveGearWeapon(interaction.user.id.toString(),gearID);
                         await database.giveBones(interaction.user.id.toString(),Dungeons[dungeonName]["bones"]);
                         await interaction.editReply(interaction.user.username+' cleared the '+dungeonName+'.');

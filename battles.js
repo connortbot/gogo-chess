@@ -5,7 +5,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder, CommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, InteractionCollector, ButtonBuilder, ButtonStyle, CommandInteractionOptionResolver, ApplicationCommandOptionWithChoicesAndAutocompleteMixin, GuildForumThreadManager } = require('discord.js');
 const { Gear, Weapons, NormalGoGos, Monsters } = require('./balance.json');
-const { waitForDebugger } = require("node:inspector");
 
 /**
  * Returns boolean, true if the dictionaries are the same.
@@ -139,6 +138,66 @@ async function death_check(side,dead,channel) {
     }
 }
 
+function createString_HPBar(HP,MAXHP,squares) {
+    let healthbar_str = '';
+    if (HP < 0) {
+        HP = 0;
+    }
+    let filledSquares = Math.floor((HP/MAXHP) * squares);
+    for (let i=0; i<filledSquares;i++) {
+        if (filledSquares <= 2) {
+            healthbar_str += ':red_square:';
+        }
+        else if (filledSquares <= 5) {
+            healthbar_str += ':orange_square:';
+        } else {
+            healthbar_str += ':green_square:';
+        }
+    }
+    for (let i=0; i<(squares-filledSquares); i++) {
+        healthbar_str += ':black_large_square:';
+    }
+    return healthbar_str;
+}
+function createEmbed_Battle(side1,side2,log) {
+    const squares = 8;
+    let maxLength = Math.max(side1.length,side2.length);
+    let BATTLE_EMBED = new EmbedBuilder()
+        .setColor(0x5e0000)
+        .setTitle("*THE BATTLE RAGES...*")
+    for (let i=0; i<maxLength; i++) {
+        let name1 = i < side1.length ? side1[i]["name"] : '\u200B';
+        let name2 = i < side2.length ? side2[i]["name"] : '\u200B';
+        let value1;
+        let value2;
+        if (i < side1.length) {
+            const charDict = side1[i];
+            let healthbar_str = createString_HPBar(charDict["HP"],charDict["MAXHP"],squares);
+            value1 = ':heart: HP: '+charDict["HP"].toString()+'/'+charDict["MAXHP"].toString()+
+            '\n'+healthbar_str;
+        } else {
+            value1 = '\u200B';
+        }
+        if (i < side2.length) {
+            const charDict = side2[i];
+            let healthbar_str = createString_HPBar(charDict["HP"],charDict["MAXHP"],squares);
+            value2 = ':heart: HP: '+charDict["HP"].toString()+'/'+charDict["MAXHP"].toString()+
+            '\n'+healthbar_str;
+        } else {
+            value2 = '\u200B';
+        }
+        BATTLE_EMBED.addFields(
+            { name: '\u200B', value: '\u200B' },
+            { name: name1, value: value1, inline: true },
+            { name: name2, value: value2, inline: true }
+        )
+    }
+    BATTLE_EMBED.addFields(
+        { name: log[log.length - 1], value: '\u200B' }
+    )
+    return BATTLE_EMBED;
+}
+
 /**
  * Runs through a battle loop between two given sides.
  * @param {Array} s1 - Array for GogoIDs for side 1
@@ -150,10 +209,11 @@ async function battle_loop(s1,s2,channel) {
         await channel.send("...one of the sides does not have a team! (Use **/team** to set up a team.)");
         return "noTeam";
     } else {
-        var side1 = [];
-        var side2 = [];
+        let side1 = [];
+        let side2 = [];
         let side1_dead = [];
         let side2_dead = [];
+        let log = [" "];
         for (let i=0; i<s1.length; i++) {
             var tGoGo = await database.getGoGo(s1[i]);
             const gogoStats = await calculator.calcGoGoStats(tGoGo);
@@ -173,6 +233,7 @@ async function battle_loop(s1,s2,channel) {
             side1_dead.push(null);
         }
         for (let i=0; i<s2.length; i++) {
+            let charDict;
             if (!s2[i].startsWith('Monster/')) {
                 var tGoGo = await database.getGoGo(s2[i]);
                 const gogoStats = await calculator.calcGoGoStats(tGoGo);
@@ -188,17 +249,20 @@ async function battle_loop(s1,s2,channel) {
                     "COOLDOWN": NormalGoGos[tGoGo.id.split('#')[0]]["COOLDOWN"],
                     "init_position": i,
                 }
-                side2.push(gogoDict);
+                charDict = gogoDict;
             } else {
                 var monsterStats = {...Monsters[s2[i].split('/')[1]]};
                 monsterStats["name"] = s2[i].split('/')[1];
                 monsterStats["MAXHP"] = monsterStats["HP"];
                 monsterStats["init_position"] = i;
-                side2.push(monsterStats);
+                charDict = monsterStats;
             }
+            side2.push(charDict);
             side2_dead.push(null);
         }
-        var turn = 1
+        let turn = 1
+        let BATTLE_EMBED = createEmbed_Battle(side1,side2,log);
+        let MESSAGE = await channel.send({embeds: [BATTLE_EMBED]});
         while (side1.length>0 && side2.length>0) {
             // SIDE 1
             for (let i=0; i<side1.length; i++) {
@@ -209,17 +273,13 @@ async function battle_loop(s1,s2,channel) {
                 var damage = thisGoGoStats["ATK"];
                 if (croll <= thisGoGoStats["CRITRATE"]) {
                     damage = damage*(thisGoGoStats["CRITDMG"]+1);
-                    const embededText = new EmbedBuilder() 
-                        .setColor(0x0099FF)
-                        .setTitle(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"])
-
-                    await channel.send({ embeds: [embededText] }); 
+                    log.push(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"]);
+                    let NEW_EMBED = createEmbed_Battle(side1,side2,log);
+                    await MESSAGE.edit({embeds: [NEW_EMBED]});
                 } else {
-                    const embededText = new EmbedBuilder() 
-                        .setColor(0x0099FF)
-                        .setTitle(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"])
-
-                    await channel.send({ embeds: [embededText] }); 
+                    log.push(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]);
+                    let NEW_EMBED = createEmbed_Battle(side1,side2,log);
+                    await MESSAGE.edit({embeds: [NEW_EMBED]});
                 }
                 side2[0]["HP"] = side2[0]["HP"]-damage;
     
@@ -228,11 +288,9 @@ async function battle_loop(s1,s2,channel) {
                 var cooldown = thisGoGoStats["COOLDOWN"];
                 if (turn % cooldown === 0) {
                     let embedMsg = await cast_ability(ability,[side1,side2],0,thisGoGoStats,[side1_dead,side2_dead]);
-                    const embeddedText = new EmbedBuilder() 
-                        .setColor(0xad11f5) // #ad11f5 purple 
-                        .setTitle(embedMsg);
-
-                    await channel.send({ embeds: [embeddedText] }); 
+                    log.push(embedMsg);
+                    let NEW_EMBED = createEmbed_Battle(side1,side2,log);
+                    await MESSAGE.edit({embeds: [NEW_EMBED]});
                 }
                 let side2_defeated = await death_check(side2,side2_dead,channel);
                 if (side2_defeated) {return "side1";}
@@ -247,20 +305,14 @@ async function battle_loop(s1,s2,channel) {
                 var damage = thisGoGoStats["ATK"];
                 if (croll <= thisGoGoStats["CRITRATE"]) {
                     damage = damage*(thisGoGoStats["CRITDMG"]+1);
-    
-                // Create embeded text for the ith iteration of the loop 
-                const embeddedText = new EmbedBuilder() 
-                    .setColor(0xd80000) // #d80000 - red
-                    .setTitle(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"])
-
-                // sends the message into the channel defined in index 
-                await channel.send({ embeds: [embeddedText] }); 
+                    // sends the message into the channel defined in index 
+                    log.push(thisGoGoStats["name"]+" dealt :boom: **"+damage.toString()+"** :boom: damage to "+target["name"]);
+                    let NEW_EMBED = createEmbed_Battle(side1,side2,log);
+                    await MESSAGE.edit({embeds: [NEW_EMBED]});
                 } else {
-                    const embededText = new EmbedBuilder() 
-                        .setColor(0xd80000) // #d80000 - red
-                        .setTitle(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"])
-
-                    await channel.send({ embeds: [embededText] }); 
+                    log.push(thisGoGoStats["name"]+" dealt **"+damage.toString()+"** damage to "+target["name"]);
+                    let NEW_EMBED = createEmbed_Battle(side1,side2,log);
+                    await MESSAGE.edit({embeds: [NEW_EMBED]});
                 }
                 side1[0]["HP"] = side1[0]["HP"]-damage;
                 // Use ability
@@ -268,11 +320,9 @@ async function battle_loop(s1,s2,channel) {
                 var cooldown = thisGoGoStats["COOLDOWN"];
                 if (turn % cooldown === 0) {
                     let embedMsg = await cast_ability(ability,[side1,side2],1,thisGoGoStats,[side1_dead,side2_dead]);
-                    const embeddedText = new EmbedBuilder() 
-                        .setColor(0xad11f5) // #ad11f5 purple 
-                        .setTitle(embedMsg);
-
-                    await channel.send({ embeds: [embeddedText] }); 
+                    log.push(embedMsg);
+                    let NEW_EMBED = createEmbed_Battle(side1,side2,log);
+                    await MESSAGE.edit({embeds: [NEW_EMBED]});
                 }
                 let side1_defeated = await death_check(side1,side1_dead,channel);
                 if (side1_defeated) {return "side2";}
