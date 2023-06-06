@@ -1,4 +1,4 @@
-# GoGo Chess 0.3.5
+# GoGo Chess v0.4.0
 
 Discord Bot for the DMRPG, GoGo World. Run using the Discord.js library.
 
