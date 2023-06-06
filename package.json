@@ -1,6 +1,6 @@
 {
   "name": "gogo-chess",
-  "version": "0.2.7",
+  "version": "0.4.0",
   "description": "King GoGo package file",
   "main": "index.js",
   "scripts": {
