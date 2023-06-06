@@ -173,16 +173,22 @@ function createEmbed_Battle(side1,side2,log) {
         if (i < side1.length) {
             const charDict = side1[i];
             let healthbar_str = createString_HPBar(charDict["HP"],charDict["MAXHP"],squares);
-            value1 = ':heart: HP: '+charDict["HP"].toString()+'/'+charDict["MAXHP"].toString()+
-            '\n'+healthbar_str;
+            value1 = ':heart: HP: '+(Math.round(charDict["HP"]*100)/100).toString()+'/'+charDict["MAXHP"].toString()+
+            '\n'+healthbar_str+
+            '\n'+':crossed_swords: ATK: '+charDict["ATK"].toString()+
+            '\n'+':drop_of_blood: CRIT DMG: '+(charDict["CRITDMG"]*100).toFixed(1).toString()+'%'+
+            '\n'+':drop_of_blood: CRIT %: '+(charDict["CRITRATE"]*100).toFixed(1).toString()+'%';
         } else {
             value1 = '\u200B';
         }
         if (i < side2.length) {
             const charDict = side2[i];
             let healthbar_str = createString_HPBar(charDict["HP"],charDict["MAXHP"],squares);
-            value2 = ':heart: HP: '+charDict["HP"].toString()+'/'+charDict["MAXHP"].toString()+
-            '\n'+healthbar_str;
+            value2 = ':heart: HP: '+(Math.round(charDict["HP"]*100)/100).toString()+'/'+charDict["MAXHP"].toString()+
+            '\n'+healthbar_str+
+            '\n'+':crossed_swords: ATK: '+charDict["ATK"].toString()+
+            '\n'+':drop_of_blood: CRIT DMG: '+(charDict["CRITDMG"]*100).toFixed(1).toString()+'%'+
+            '\n'+':drop_of_blood: CRIT %: '+(charDict["CRITRATE"]*100).toFixed(1).toString()+'%';
         } else {
             value2 = '\u200B';
         }
@@ -192,8 +198,15 @@ function createEmbed_Battle(side1,side2,log) {
             { name: name2, value: value2, inline: true }
         )
     }
+    let log_string = '';
+    let log_dup = [...log];
+    let recent_log = log_dup.splice(-5);
+    for (let i=0; i<recent_log.length; i++) {
+        log_string += recent_log[i];
+        log_string += '\n';
+    }
     BATTLE_EMBED.addFields(
-        { name: log[log.length - 1], value: '\u200B' }
+        { name: '\u200B', value: log_string }
     )
     return BATTLE_EMBED;
 }
